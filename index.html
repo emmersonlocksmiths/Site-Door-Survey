@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Door Survey" />
+<title>Door Survey — Emmerson Locksmiths</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand: #1a3a5c;
+    --brand-light: #e8f0f8;
+    --brand-mid: #2e5f93;
+    --accent: #e07b2a;
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --surface2: #f0f0ee;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.22);
+    --text: #1a1a18;
+    --text-mid: #555550;
+    --text-muted: #888880;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --danger: #b53c2a;
+    --success: #2a7a4a;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── Header ── */
+  .app-header {
+    background: var(--brand);
+    color: #fff;
+    padding: 14px 16px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 58px;
+  }
+  .app-header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  .app-header .sub { font-size: 12px; opacity: 0.7; margin-top: 1px; }
+  .header-icon {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .back-btn {
+    background: none; border: none; color: #fff;
+    font-size: 14px; font-family: inherit;
+    display: flex; align-items: center; gap: 4px;
+    cursor: pointer; padding: 4px 0; opacity: 0.9;
+  }
+  .back-btn i { font-size: 18px; }
+
+  /* ── Pages ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Wrap ── */
+  .wrap { max-width: 480px; margin: 0 auto; padding: 20px 14px 0; }
+
+  /* ── Job details page ── */
+  .page-intro {
+    margin-bottom: 24px;
+  }
+  .page-intro h2 {
+    font-size: 22px; font-weight: 600; color: var(--brand);
+    letter-spacing: -0.02em; margin-bottom: 4px;
+  }
+  .page-intro p { font-size: 14px; color: var(--text-muted); }
+
+  .detail-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .field label {
+    font-size: 12px; color: var(--text-muted);
+    display: block; margin-bottom: 5px; font-weight: 500;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    font-size: 15px;
+    font-family: inherit;
+    padding: 10px 12px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--brand-mid);
+    outline-offset: 1px;
+    border-color: var(--brand-mid);
+    background: var(--surface);
+  }
+  .field input::placeholder { color: var(--text-muted); }
+
+  .next-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .next-btn:active { opacity: 0.85; transform: scale(0.99); }
+  .next-btn i { font-size: 20px; }
+
+  /* ── Survey page ── */
+  .stats-bar {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .stat {
+    flex: 1; background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px; text-align: center;
+  }
+  .stat .num { font-size: 22px; font-weight: 600; color: var(--brand); }
+  .stat .lbl { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+  .job-summary-bar {
+    background: var(--brand-light);
+    border: 0.5px solid rgba(26,58,92,0.15);
+    border-radius: var(--radius);
+    padding: 10px 13px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .job-summary-bar .job-name {
+    font-size: 13px; font-weight: 600; color: var(--brand);
+  }
+  .job-summary-bar .job-ref {
+    font-size: 12px; color: var(--text-muted); margin-top: 1px;
+  }
+  .edit-job-btn {
+    background: none; border: 0.5px solid rgba(26,58,92,0.25);
+    border-radius: 8px; padding: 5px 10px;
+    font-size: 12px; color: var(--brand); cursor: pointer;
+    font-family: inherit; white-space: nowrap;
+  }
+
+  /* ── Door cards ── */
+  .door-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+
+  .door-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .door-card.complete { border-left: 3px solid var(--success); }
+
+  .door-hdr {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 13px;
+    cursor: pointer; user-select: none;
+    background: var(--surface);
+  }
+  .door-hdr:active { background: var(--surface2); }
+
+  .door-num-badge {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--brand-light); color: var(--brand);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .door-hdr-text { flex: 1; min-width: 0; }
+  .door-hdr-title {
+    font-size: 14px; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .door-hdr-sub {
+    font-size: 12px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .door-chevron { font-size: 18px; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+  .door-chevron.open { transform: rotate(180deg); }
+
+  .door-body {
+    display: none; padding: 12px 13px;
+    border-top: 0.5px solid var(--border);
+  }
+  .door-body.open { display: block; }
+
+  .field-section { margin-bottom: 14px; }
+  .section-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .section-label i { font-size: 14px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+  .field textarea { resize: none; height: 64px; font-size: 14px; }
+  .door-body .field input, .door-body .field select, .door-body .field textarea {
+    font-size: 14px; padding: 8px 10px;
+  }
+
+  /* ── Photos ── */
+  .photo-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .photo-thumb {
+    width: 68px; height: 68px; object-fit: cover;
+    border-radius: 8px; border: 0.5px solid var(--border);
+  }
+  .photo-add-btn {
+    width: 68px; height: 68px; border-radius: 8px;
+    border: 1.5px dashed var(--border-strong);
+    background: var(--surface2); color: var(--text-muted);
+    font-size: 24px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .photo-add-btn:active { background: var(--brand-light); }
+  .file-input { display: none; }
+
+  .delete-door-btn {
+    width: 100%; margin-top: 4px; padding: 9px;
+    border: 0.5px solid rgba(180,60,40,0.3);
+    border-radius: var(--radius);
+    background: none; color: var(--danger);
+    font-size: 13px; font-family: inherit; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .delete-door-btn:active { background: #fff0ee; }
+
+  .add-door-row { margin-bottom: 14px; }
+  .add-door-btn {
+    width: 100%; padding: 13px;
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: none; color: var(--text-mid);
+    font-size: 15px; font-family: inherit; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .add-door-btn:active { background: var(--surface); }
+
+  .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .btn {
+    padding: 13px 10px; border-radius: var(--radius-lg);
+    font-size: 14px; font-family: inherit; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface); color: var(--text);
+  }
+  .btn:active { opacity: 0.8; transform: scale(0.98); }
+  .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .btn i { font-size: 18px; }
+
+  .empty-state {
+    text-align: center; padding: 32px 20px; color: var(--text-muted);
+  }
+  .empty-state i { font-size: 40px; margin-bottom: 10px; display: block; }
+  .empty-state p { font-size: 14px; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text); color: #fff;
+    font-size: 13px; padding: 10px 18px;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    z-index: 200; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ══ PAGE 1: Job Details ══ -->
+<div class="page active" id="page-details">
+  <header class="app-header">
+    <div>
+      <h1>Door Survey</h1>
+      <div class="sub">Emmerson Locksmiths &amp; Security</div>
+    </div>
+    <div class="header-icon" aria-hidden="true"><i class="ti ti-clipboard-list"></i></div>
+  </header>
+
+  <div class="wrap">
+    <div class="page-intro">
+      <h2>New survey</h2>
+      <p>Enter the job details before starting the door survey.</p>
+    </div>
+
+    <div class="detail-card">
+      <div class="field">
+        <label for="client-name">Client name</label>
+        <input type="text" id="client-name" placeholder="e.g. Coles Group" />
+      </div>
+      <div class="field">
+        <label for="site-name">Site name</label>
+        <input type="text" id="site-name" placeholder="e.g. Coles Maroochydore" />
+      </div>
+      <div class="field">
+        <label for="job-ref">Reference</label>
+        <input type="text" id="job-ref" placeholder="e.g. JOB-1042" />
+      </div>
+      <div class="field">
+        <label for="survey-date">Date</label>
+        <input type="date" id="survey-date" />
+      </div>
+    </div>
+
+    <button class="next-btn" onclick="goToSurvey()">
+      Start door survey <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══ PAGE 2: Door Survey ══ -->
+<div class="page" id="page-survey">
+  <header class="app-header">
+    <button class="back-btn" onclick="goBack()" aria-label="Back to job details">
+      <i class="ti ti-arrow-left" aria-hidden="true"></i> Job details
+    </button>
+    <div class="header-icon" aria-hidden="true"><i class="ti ti-door"></i></div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- Job summary bar -->
+    <div class="job-summary-bar">
+      <div>
+        <div class="job-name" id="summary-name">—</div>
+        <div class="job-ref" id="summary-ref">—</div>
+      </div>
+      <button class="edit-job-btn" onclick="goBack()">
+        <i class="ti ti-edit" aria-hidden="true" style="font-size:13px;vertical-align:-1px;"></i> Edit
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="num" id="stat-total">0</div>
+        <div class="lbl">Doors</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="stat-complete">0</div>
+        <div class="lbl">Complete</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="stat-photos">0</div>
+        <div class="lbl">Photos</div>
+      </div>
+    </div>
+
+    <!-- Door list -->
+    <div class="door-list" id="door-list">
+      <div class="empty-state" id="empty-state">
+        <i class="ti ti-door-off" aria-hidden="true"></i>
+        <p>No doors yet.<br>Tap "Add door" to start the survey.</p>
+      </div>
+    </div>
+
+    <div class="add-door-row">
+      <button class="add-door-btn" onclick="addDoor()" aria-label="Add door">
+        <i class="ti ti-plus" aria-hidden="true"></i> Add door
+      </button>
+    </div>
+
+    <div class="action-row">
+      <button class="btn" onclick="clearAll()">
+        <i class="ti ti-trash" aria-hidden="true"></i> Clear all
+      </button>
+      <button class="btn btn-primary" onclick="exportPDF()">
+        <i class="ti ti-download" aria-hidden="true"></i> Export PDF
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+
+const CYLINDERS = ['— Select —','570 Oval Cylinder','201 Cylinder','8221 Cylinder','530 Cylinder','Euro Cylinder Fixed Cam','Euro Cylinder Lazy Cam','Other'];
+const DOOR_TYPES = ['— Select —','Timber','Aluminium','Glass','Steel','UPVC','Fire door','Other'];
+const HARDWARE = ['— Select —','Lever handle','Knob','Pull handle','Panic bar / exit device','Digital lock','Sliding','None','Other'];
+const COLOURS = ['— Select —','Silver / Satin','Brushed chrome','Polished chrome','Matte black','Antique brass','Gold','White','Brown','Other'];
+const SWING = ['— Select —','Open in','Open out','Sliding','Double swing'];
+
+let doors = [];
+let counter = 0;
+let photoData = {};
+let openCardId = null;
+
+function uid() { return ++counter; }
+
+function newDoor() {
+  const seq = doors.length + 1;
+  return { id: uid(), seq, doorNo: String(seq), planNo: '', type: '', swing: '', hardware: '', colour: '', cylinder: '', notes: '' };
+}
+
+function isComplete(d) { return !!(d.type && d.swing && d.cylinder); }
+function totalPhotos() { return Object.values(photoData).reduce((a,b)=>a+b.length, 0); }
+
+function updateStats() {
+  const complete = doors.filter(isComplete).length;
+  document.getElementById('stat-total').textContent = doors.length;
+  document.getElementById('stat-complete').textContent = complete;
+  document.getElementById('stat-photos').textContent = totalPhotos();
+}
+
+function goToSurvey() {
+  const client = document.getElementById('client-name').value.trim();
+  const site = document.getElementById('site-name').value.trim();
+  const ref = document.getElementById('job-ref').value.trim();
+  const date = document.getElementById('survey-date').value;
+
+  const displayName = [client, site].filter(Boolean).join(' — ') || 'Unnamed job';
+  const displayRef = [ref, date ? new Date(date).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}) : ''].filter(Boolean).join(' · ');
+
+  document.getElementById('summary-name').textContent = displayName;
+  document.getElementById('summary-ref').textContent = displayRef || 'No reference';
+
+  document.getElementById('page-details').classList.remove('active');
+  document.getElementById('page-survey').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  document.getElementById('page-survey').classList.remove('active');
+  document.getElementById('page-details').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selHTML(opts, val, onchange) {
+  return `<select onchange="${onchange}">${opts.map(o=>`<option value="${o==='— Select —'?'':o}"${val===o||(!val&&o==='— Select —')?' selected':''}>${o}</option>`).join('')}</select>`;
+}
+
+function cardHTML(d) {
+  const photos = photoData[d.id] || [];
+  const complete = isComplete(d);
+  const summary = [d.type, d.swing, d.cylinder].filter(Boolean).join(' · ') || 'Tap to fill in details';
+  const isOpen = openCardId === d.id;
+
+  return `
+  <div class="door-card${complete?' complete':''}" id="card-${d.id}">
+    <div class="door-hdr" onclick="toggleCard(${d.id})" role="button" aria-expanded="${isOpen}">
+      <div class="door-num-badge">${d.doorNo}</div>
+      <div class="door-hdr-text">
+        <div class="door-hdr-title">Door ${d.doorNo}${d.planNo?' &nbsp;<span style="font-weight:400;color:var(--text-muted)">Plan: '+d.planNo+'</span>':''}</div>
+        <div class="door-hdr-sub">${summary}</div>
+      </div>
+      <i class="ti ti-chevron-down door-chevron${isOpen?' open':''}" aria-hidden="true"></i>
+    </div>
+    <div class="door-body${isOpen?' open':''}" id="body-${d.id}">
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-hash" aria-hidden="true"></i>Identification</div>
+        <div class="two-col">
+          <div class="field">
+            <label>Door no.</label>
+            <input type="text" value="${d.doorNo}" oninput="setField(${d.id},'doorNo',this.value)" />
+          </div>
+          <div class="field">
+            <label>Plan / stamp no.</label>
+            <input type="text" value="${d.planNo}" placeholder="e.g. D-04" oninput="setField(${d.id},'planNo',this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-door" aria-hidden="true"></i>Door</div>
+        <div class="two-col">
+          <div class="field">
+            <label>Type</label>
+            ${selHTML(DOOR_TYPES, d.type, `setField(${d.id},'type',this.value)`)}
+          </div>
+          <div class="field">
+            <label>Swing</label>
+            ${selHTML(SWING, d.swing, `setField(${d.id},'swing',this.value)`)}
+          </div>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-tool" aria-hidden="true"></i>Hardware</div>
+        <div class="two-col">
+          <div class="field">
+            <label>Type</label>
+            ${selHTML(HARDWARE, d.hardware, `setField(${d.id},'hardware',this.value)`)}
+          </div>
+          <div class="field">
+            <label>Colour</label>
+            ${selHTML(COLOURS, d.colour, `setField(${d.id},'colour',this.value)`)}
+          </div>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-key" aria-hidden="true"></i>Cylinder</div>
+        <div class="field">
+          ${selHTML(CYLINDERS, d.cylinder, `setField(${d.id},'cylinder',this.value)`)}
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-note" aria-hidden="true"></i>Notes</div>
+        <div class="field">
+          <textarea placeholder="Additional notes…" oninput="setField(${d.id},'notes',this.value)">${d.notes}</textarea>
+        </div>
+      </div>
+
+      <div class="field-section">
+        <div class="section-label"><i class="ti ti-camera" aria-hidden="true"></i>Photos <span style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">${photos.length} added</span></div>
+        <div class="photo-strip" id="photos-${d.id}">
+          ${photos.map((src,i)=>`<img src="${src}" class="photo-thumb" alt="Photo ${i+1}" />`).join('')}
+          <div class="photo-add-btn" onclick="document.getElementById('fileinput-${d.id}').click()" role="button" aria-label="Add photo">
+            <i class="ti ti-plus" aria-hidden="true"></i>
+          </div>
+          <input type="file" accept="image/*" capture="environment" multiple class="file-input" id="fileinput-${d.id}" onchange="handlePhotos(${d.id},this)" />
+        </div>
+      </div>
+
+      <button class="delete-door-btn" onclick="deleteDoor(${d.id})">
+        <i class="ti ti-trash" aria-hidden="true"></i> Remove this door
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderAll() {
+  const list = document.getElementById('door-list');
+  const empty = document.getElementById('empty-state');
+  if (doors.length === 0) {
+    list.innerHTML = '';
+    list.appendChild(empty);
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    list.innerHTML = doors.map(cardHTML).join('');
+  }
+  updateStats();
+}
+
+function toggleCard(id) {
+  openCardId = openCardId === id ? null : id;
+  renderAll();
+  if (openCardId) {
+    setTimeout(()=>{
+      const el = document.getElementById('card-'+id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
+  }
+}
+
+function setField(id, key, value) {
+  const d = doors.find(x=>x.id===id);
+  if (!d) return;
+  d[key] = value;
+  const hdrTitle = document.querySelector(`#card-${id} .door-hdr-title`);
+  const hdrSub = document.querySelector(`#card-${id} .door-hdr-sub`);
+  const card = document.getElementById('card-'+id);
+  if (hdrTitle) hdrTitle.innerHTML = `Door ${d.doorNo}${d.planNo?' &nbsp;<span style="font-weight:400;color:var(--text-muted)">Plan: '+d.planNo+'</span>':''}`;
+  if (hdrSub) hdrSub.textContent = [d.type, d.swing, d.cylinder].filter(Boolean).join(' · ') || 'Tap to fill in details';
+  if (card) { if (isComplete(d)) card.classList.add('complete'); else card.classList.remove('complete'); }
+  updateStats();
+}
+
+function handlePhotos(id, input) {
+  if (!photoData[id]) photoData[id] = [];
+  const files = Array.from(input.files);
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      photoData[id].push(e.target.result);
+      loaded++;
+      if (loaded === files.length) {
+        const strip = document.getElementById('photos-'+id);
+        if (strip) {
+          const btn = strip.querySelector('.photo-add-btn');
+          const inp = strip.querySelector('.file-input');
+          const imgs = photoData[id].map((src,i)=>`<img src="${src}" class="photo-thumb" alt="Photo ${i+1}" />`).join('');
+          strip.innerHTML = imgs;
+          strip.appendChild(btn);
+          strip.appendChild(inp);
+        }
+        const countEl = document.querySelector(`#card-${id} .section-label span`);
+        if (countEl) countEl.textContent = `${photoData[id].length} added`;
+        updateStats();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function addDoor() {
+  const d = newDoor();
+  doors.push(d);
+  openCardId = d.id;
+  renderAll();
+  setTimeout(()=>{
+    const el = document.getElementById('card-'+d.id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 60);
+}
+
+function deleteDoor(id) {
+  if (!confirm('Remove this door?')) return;
+  doors = doors.filter(d=>d.id!==id);
+  delete photoData[id];
+  if (openCardId === id) openCardId = null;
+  renderAll();
+}
+
+function clearAll() {
+  if (doors.length === 0) return;
+  if (!confirm('Clear all doors from this survey? This cannot be undone.')) return;
+  doors = []; photoData = {}; counter = 0; openCardId = null;
+  renderAll();
+  showToast('Survey cleared');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+function exportPDF() {
+  if (doors.length === 0) { showToast('No doors to export'); return; }
+  const { jsPDF } = window.jspdf;
+  if (!jsPDF) { showToast('PDF library not loaded'); return; }
+
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const W = 210, margin = 15, contentW = W - margin * 2;
+
+  const client = document.getElementById('client-name').value || '';
+  const site = document.getElementById('site-name').value || '';
+  const ref = document.getElementById('job-ref').value || '';
+  const dateVal = document.getElementById('survey-date').value;
+  const dateStr = dateVal
+    ? new Date(dateVal).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})
+    : new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'});
+
+  let y = 0;
+
+  // Header bar
+  doc.setFillColor(26, 58, 92);
+  doc.rect(0, 0, 210, 30, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16); doc.setFont(undefined, 'bold');
+  doc.text('Door Survey Report', margin, 13);
+  doc.setFontSize(9); doc.setFont(undefined, 'normal');
+  doc.text('Emmerson Locksmiths & Security', margin, 21);
+  doc.text(dateStr, W - margin, 13, { align: 'right' });
+  if (ref) doc.text('Ref: ' + ref, W - margin, 21, { align: 'right' });
+  y = 38;
+
+  // Client / site block
+  if (client) {
+    doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
+    doc.text('Client', margin, y);
+    doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
+    doc.text(client, margin + 22, y); y += 6;
+  }
+  if (site) {
+    doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
+    doc.text('Site', margin, y);
+    doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
+    doc.text(site, margin + 22, y); y += 6;
+  }
+  y += 2;
+
+  // Summary line
+  const complete = doors.filter(isComplete).length;
+  doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(120, 120, 120);
+  doc.text(`${doors.length} door${doors.length===1?'':'s'} surveyed · ${complete} complete · ${totalPhotos()} photo${totalPhotos()===1?'':'s'}`, margin, y);
+  y += 6;
+
+  doc.setDrawColor(200, 210, 220); doc.setLineWidth(0.4);
+  doc.line(margin, y, W - margin, y); y += 7;
+
+  // Doors
+  doors.forEach((d, idx) => {
+    const photos = photoData[d.id] || [];
+    const neededHeight = 16 + 7 * 5 + (photos.length > 0 ? 38 : 0) + 8;
+    if (y + neededHeight > 275) { doc.addPage(); y = margin; }
+
+    doc.setFillColor(232, 240, 248);
+    doc.rect(margin, y - 4, contentW, 8, 'F');
+    doc.setTextColor(26, 58, 92); doc.setFontSize(11); doc.setFont(undefined, 'bold');
+    doc.text(`Door ${d.doorNo}${d.planNo ? '  ·  Plan: ' + d.planNo : ''}`, margin + 3, y + 1);
+    y += 8;
+
+    const fields = [
+      ['Door type', d.type],
+      ['Swing', d.swing],
+      ['Hardware', d.hardware],
+      ['Hardware colour', d.colour],
+      ['Cylinder', d.cylinder],
+      ['Notes', d.notes],
+    ].filter(([, v]) => v);
+
+    doc.setFontSize(9);
+    fields.forEach(([label, val]) => {
+      if (y > 275) { doc.addPage(); y = margin; }
+      doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
+      doc.text(label + ':', margin + 3, y);
+      doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
+      const lines = doc.splitTextToSize(String(val), contentW - 50);
+      doc.text(lines, margin + 45, y);
+      y += lines.length * 5;
+    });
+
+    if (fields.length === 0) {
+      doc.setFont(undefined, 'italic'); doc.setTextColor(160, 160, 160); doc.setFontSize(9);
+      doc.text('No details recorded', margin + 3, y); y += 5;
+    }
+
+    if (photos.length > 0) {
+      y += 3;
+      if (y + 36 > 275) { doc.addPage(); y = margin; }
+      let px = margin + 3;
+      photos.forEach((src) => {
+        if (px + 36 > W - margin) { y += 38; px = margin + 3; }
+        if (y + 36 > 275) { doc.addPage(); y = margin; }
+        try { doc.addImage(src, 'JPEG', px, y, 32, 32); } catch(e){}
+        px += 35;
+      });
+      y += 36;
+    }
+
+    y += 6;
+    if (idx < doors.length - 1) {
+      doc.setDrawColor(220, 225, 230); doc.setLineWidth(0.3);
+      doc.line(margin, y, W - margin, y); y += 5;
+    }
+  });
+
+  doc.setFontSize(8); doc.setTextColor(160); doc.setFont(undefined, 'normal');
+  doc.text('Generated by Emmerson Locksmiths & Security — emmersonlocksmiths.com.au', margin, 290);
+
+  const sitePart = (site || client || 'survey').replace(/\s+/g,'-').toLowerCase();
+  doc.save(`door-survey-${sitePart}-${new Date().toISOString().slice(0,10)}.pdf`);
+  showToast('PDF saved');
+}
+
+// Init
+document.getElementById('survey-date').value = new Date().toISOString().split('T')[0];
+renderAll();
+</script>
+</body>
+</html>
