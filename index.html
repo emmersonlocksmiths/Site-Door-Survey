@@ -320,6 +320,27 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
+  /* ── Job type selector ── */
+  .job-type-btn {
+    padding: 14px 10px;
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-mid);
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .job-type-btn.active {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    color: var(--brand);
+    font-weight: 600;
+  }
+
   /* ── Confirm modal ── */
   .modal-overlay {
     display: none;
@@ -367,7 +388,7 @@
 <div class="page active" id="page-details">
   <header class="app-header">
     <div>
-      <h1>Door Survey</h1>
+      <h1>Door Survey Form</h1>
       <div class="sub">Emmerson Locksmiths &amp; Security</div>
     </div>
     <div class="header-icon"><i class="ti ti-clipboard-list"></i></div>
@@ -380,21 +401,36 @@
     <div class="detail-card">
       <div class="field">
         <label for="client-name">Client name</label>
-        <input type="text" id="client-name" placeholder="e.g. Coles Group" />
+        <input type="text" id="client-name" />
       </div>
       <div class="field">
         <label for="site-name">Site name</label>
-        <input type="text" id="site-name" placeholder="e.g. Coles Maroochydore" />
+        <input type="text" id="site-name" />
       </div>
       <div class="field">
         <label for="job-ref">Reference</label>
-        <input type="text" id="job-ref" placeholder="e.g. JOB-1042" />
+        <input type="text" id="job-ref" />
       </div>
       <div class="field">
         <label for="survey-date">Date</label>
         <input type="date" id="survey-date" />
       </div>
     </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Job type</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button class="job-type-btn active" id="btn-commercial" onclick="selectJobType('commercial')">
+          <i class="ti ti-building" style="font-size:22px;display:block;margin-bottom:6px;"></i>
+          Commercial
+        </button>
+        <button class="job-type-btn" id="btn-residential" onclick="selectJobType('residential')">
+          <i class="ti ti-home" style="font-size:22px;display:block;margin-bottom:6px;"></i>
+          Residential
+        </button>
+      </div>
+    </div>
+
     <button class="next-btn" onclick="startSurvey()">
       Start door survey <i class="ti ti-arrow-right"></i>
     </button>
@@ -519,6 +555,105 @@
   </div>
 </div>
 
+<!-- PAGE: Residential Survey -->
+<div class="page" id="page-survey-res">
+  <header class="app-header">
+    <button class="back-btn" onclick="goToDetails()">
+      <i class="ti ti-arrow-left"></i> Job details
+    </button>
+    <div class="header-icon"><i class="ti ti-home"></i></div>
+  </header>
+  <div class="wrap">
+
+    <div class="job-summary-bar">
+      <div>
+        <div class="job-name" id="res-summary-name">—</div>
+        <div class="job-ref" id="res-summary-ref">—</div>
+      </div>
+      <button class="edit-job-btn" onclick="goToDetails()">
+        <i class="ti ti-edit" style="font-size:13px;vertical-align:-1px;"></i> Edit
+      </button>
+    </div>
+
+    <div class="door-tabs-wrap">
+      <div class="door-tabs" id="res-door-tabs"></div>
+    </div>
+
+    <div class="door-form-card">
+      <div class="door-form-heading">
+        <h2 id="res-form-door-title">Door 1</h2>
+        <span class="door-counter" id="res-form-door-counter">Door 1 of 1</span>
+      </div>
+
+      <div class="field door-name-field">
+        <label for="rf-name">Door name / location</label>
+        <input type="text" id="rf-name" placeholder="e.g. Front door, Back door, Garage…" />
+      </div>
+
+      <div class="section-label"><i class="ti ti-hash"></i>Identification</div>
+      <div class="field">
+        <label>Door no.</label>
+        <input type="text" id="rf-doorNo" />
+      </div>
+
+      <div class="section-label"><i class="ti ti-door"></i>Door</div>
+      <div class="two-col">
+        <div class="field">
+          <label>Type</label>
+          <select id="rf-type"></select>
+        </div>
+        <div class="field">
+          <label>Swing</label>
+          <select id="rf-swing"></select>
+        </div>
+      </div>
+
+      <div class="section-label"><i class="ti ti-tool"></i>Hardware</div>
+      <div class="two-col">
+        <div class="field">
+          <label>Type</label>
+          <select id="rf-hardware"></select>
+        </div>
+        <div class="field">
+          <label>Colour</label>
+          <select id="rf-colour"></select>
+        </div>
+      </div>
+
+      <div class="section-label"><i class="ti ti-note"></i>Notes</div>
+      <div class="field">
+        <textarea id="rf-notes" placeholder="Additional notes…"></textarea>
+      </div>
+
+      <div class="section-label">
+        <i class="ti ti-camera"></i>Photos
+        <span id="res-photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">0 added</span>
+      </div>
+      <div class="photo-strip" id="res-photo-strip">
+        <div class="photo-add-btn" id="res-photo-add-btn" onclick="document.getElementById('res-file-input').click()">
+          <i class="ti ti-plus"></i>
+        </div>
+        <input type="file" accept="image/*" capture="environment" multiple class="file-input" id="res-file-input" onchange="handlePhotosRes(this)" />
+      </div>
+    </div>
+
+    <div class="door-actions">
+      <button class="btn-save-next" id="res-btn-save-next" onclick="saveAndNextRes()">
+        Save &amp; next door <i class="ti ti-arrow-right"></i>
+      </button>
+      <div class="btn-row">
+        <button class="btn btn-danger" onclick="deleteCurrentRes()">
+          <i class="ti ti-trash"></i> Delete door
+        </button>
+        <button class="btn btn-export" onclick="goToSummary()">
+          <i class="ti ti-list"></i> View all &amp; export
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- PAGE 3: Summary -->
 <div class="page" id="page-summary">
   <header class="app-header">
@@ -566,9 +701,23 @@ let doors = [];
 let currentIdx = 0;
 let photoData = {};
 let currentPhotos = [];
+let jobType = 'commercial'; // 'commercial' or 'residential'
+
+// Residential door state
+let resDoors = [];
+let resCurrentIdx = 0;
+let resPhotoData = {};
+let resCurrentPhotos = [];
+
+function selectJobType(type) {
+  jobType = type;
+  document.getElementById('btn-commercial').classList.toggle('active', type === 'commercial');
+  document.getElementById('btn-residential').classList.toggle('active', type === 'residential');
+}
 
 function populateSel(id, opts) {
   const el = document.getElementById(id);
+  if (!el) return;
   el.innerHTML = '<option value="">— Select —</option>' + opts.map(o=>`<option value="${o}">${o}</option>`).join('');
 }
 function initSelects() {
@@ -577,6 +726,11 @@ function initSelects() {
   populateSel('f-hardware', HARDWARE);
   populateSel('f-colour', COLOURS);
   populateSel('f-cylinder', CYLINDERS);
+  // Residential selects
+  populateSel('rf-type', DOOR_TYPES);
+  populateSel('rf-swing', SWING);
+  populateSel('rf-hardware', HARDWARE);
+  populateSel('rf-colour', COLOURS);
 }
 
 // ── Plan/stamp auto-increment logic ──
@@ -619,34 +773,211 @@ function startSurvey() {
   const date = document.getElementById('survey-date').value;
   const displayName = [client, site].filter(Boolean).join(' — ') || 'Unnamed job';
   const displayRef = [ref, date ? new Date(date).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}) : ''].filter(Boolean).join(' · ');
-  document.getElementById('summary-name').textContent = displayName;
-  document.getElementById('summary-ref').textContent = displayRef || 'No reference';
 
-  if (doors.length === 0) {
-    doors = [freshDoor(1)];
-    currentIdx = 0;
-    currentPhotos = [];
+  if (jobType === 'residential') {
+    document.getElementById('res-summary-name').textContent = displayName;
+    document.getElementById('res-summary-ref').textContent = displayRef || 'No reference';
+    if (resDoors.length === 0) {
+      resDoors = [freshResDoor(1)];
+      resCurrentIdx = 0;
+      resCurrentPhotos = [];
+    }
+    loadResDoor(resCurrentIdx);
+    renderResTabs();
+    showPage('page-survey-res');
+  } else {
+    document.getElementById('summary-name').textContent = displayName;
+    document.getElementById('summary-ref').textContent = displayRef || 'No reference';
+    if (doors.length === 0) {
+      doors = [freshDoor(1)];
+      currentIdx = 0;
+      currentPhotos = [];
+    }
+    loadDoor(currentIdx);
+    renderTabs();
+    showPage('page-survey');
   }
-  loadDoor(currentIdx);
-  renderTabs();
-  showPage('page-survey');
 }
 
 function goToDetails() {
-  autoSaveCurrent();
+  if (jobType === 'residential') autoSaveCurrentRes();
+  else autoSaveCurrent();
   showPage('page-details');
 }
 
 function goToSurvey() {
-  loadDoor(currentIdx);
-  renderTabs();
-  showPage('page-survey');
+  if (jobType === 'residential') {
+    loadResDoor(resCurrentIdx);
+    renderResTabs();
+    showPage('page-survey-res');
+  } else {
+    loadDoor(currentIdx);
+    renderTabs();
+    showPage('page-survey');
+  }
 }
 
 function goToSummary() {
-  autoSaveCurrent();
+  if (jobType === 'residential') autoSaveCurrentRes();
+  else autoSaveCurrent();
   renderSummary();
   showPage('page-summary');
+}
+
+// ── Residential door functions ──
+function freshResDoor(num) {
+  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', type: '', swing: '', hardware: '', colour: '', notes: '' };
+}
+
+function loadResDoor(idx) {
+  const d = resDoors[idx];
+  resCurrentPhotos = resPhotoData[d.id] ? [...resPhotoData[d.id]] : [];
+  document.getElementById('rf-name').value = d.name;
+  document.getElementById('rf-doorNo').value = d.doorNo;
+  document.getElementById('rf-type').value = d.type;
+  document.getElementById('rf-swing').value = d.swing;
+  document.getElementById('rf-hardware').value = d.hardware;
+  document.getElementById('rf-colour').value = d.colour;
+  document.getElementById('rf-notes').value = d.notes;
+  const label = d.name || ('Door ' + d.doorNo);
+  document.getElementById('res-form-door-title').textContent = label;
+  document.getElementById('res-form-door-counter').textContent = `Door ${idx+1} of ${resDoors.length}`;
+  renderResPhotoStrip();
+  updateResSaveNextBtn(idx);
+}
+
+function readResForm() {
+  return {
+    name:     document.getElementById('rf-name').value.trim(),
+    doorNo:   document.getElementById('rf-doorNo').value.trim(),
+    type:     document.getElementById('rf-type').value,
+    swing:    document.getElementById('rf-swing').value,
+    hardware: document.getElementById('rf-hardware').value,
+    colour:   document.getElementById('rf-colour').value,
+    notes:    document.getElementById('rf-notes').value.trim(),
+  };
+}
+
+function autoSaveCurrentRes() {
+  const data = readResForm();
+  Object.assign(resDoors[resCurrentIdx], data);
+  resPhotoData[resDoors[resCurrentIdx].id] = [...resCurrentPhotos];
+}
+
+function isResComplete(d) { return !!(d.type && d.swing); }
+
+function updateResSaveNextBtn(idx) {
+  const btn = document.getElementById('res-btn-save-next');
+  const isLast = idx === resDoors.length - 1;
+  btn.innerHTML = isLast
+    ? 'Save &amp; next door <i class="ti ti-arrow-right"></i>'
+    : 'Next door <i class="ti ti-arrow-right"></i>';
+}
+
+function saveAndNextRes() {
+  autoSaveCurrentRes();
+  const isLast = resCurrentIdx === resDoors.length - 1;
+  if (isLast) resDoors.push(freshResDoor(resDoors.length + 1));
+  resCurrentIdx++;
+  resCurrentPhotos = [];
+  loadResDoor(resCurrentIdx);
+  renderResTabs();
+  showToast('Door saved');
+  window.scrollTo(0,0);
+}
+
+function deleteCurrentRes() {
+  const d = resDoors[resCurrentIdx];
+  const label = d.name || ('Door ' + d.doorNo);
+  if (resDoors.length === 1) {
+    showModal('Clear this door?', 'This is the only door. All its details will be cleared.', 'Clear door', () => {
+      resDoors[0] = freshResDoor(1);
+      resCurrentIdx = 0;
+      resCurrentPhotos = [];
+      loadResDoor(0);
+      renderResTabs();
+      showToast('Door cleared');
+    });
+    return;
+  }
+  showModal('Delete ' + label + '?', 'This door will be removed from the survey. This cannot be undone.', 'Delete door', () => {
+    delete resPhotoData[resDoors[resCurrentIdx].id];
+    resDoors.splice(resCurrentIdx, 1);
+    resDoors.forEach((door, i) => { door.doorNo = String(i + 1); });
+    if (resCurrentIdx >= resDoors.length) resCurrentIdx = resDoors.length - 1;
+    resCurrentPhotos = resPhotoData[resDoors[resCurrentIdx].id] ? [...resPhotoData[resDoors[resCurrentIdx].id]] : [];
+    loadResDoor(resCurrentIdx);
+    renderResTabs();
+    window.scrollTo(0, 0);
+    showToast(label + ' deleted');
+  });
+}
+
+function renderResTabs() {
+  const wrap = document.getElementById('res-door-tabs');
+  wrap.innerHTML = resDoors.map((d,i) => {
+    const active = i === resCurrentIdx;
+    const saved = isResComplete(d);
+    const label = d.name || ('Door ' + d.doorNo);
+    return `<button class="door-tab${active?' active':''}${saved?' saved':''}" onclick="switchResTab(${i})">
+      ${saved ? `<span class="tick"><i class="ti ti-check" style="font-size:9px;"></i></span>` : ''}
+      ${label}
+    </button>`;
+  }).join('');
+  setTimeout(()=>{
+    const tabs = wrap.querySelectorAll('.door-tab');
+    if (tabs[resCurrentIdx]) tabs[resCurrentIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }, 50);
+}
+
+function switchResTab(idx) {
+  autoSaveCurrentRes();
+  resCurrentIdx = idx;
+  resCurrentPhotos = resPhotoData[resDoors[idx].id] ? [...resPhotoData[resDoors[idx].id]] : [];
+  loadResDoor(idx);
+  renderResTabs();
+  window.scrollTo(0,0);
+}
+
+function handlePhotosRes(input) {
+  const files = Array.from(input.files);
+  let processed = 0;
+  const results = new Array(files.length);
+  files.forEach((file, i) => {
+    const arrReader = new FileReader();
+    arrReader.onload = (arrEv) => {
+      const orientation = getExifOrientation(arrEv.target.result);
+      const urlReader = new FileReader();
+      urlReader.onload = (urlEv) => {
+        correctOrientation(urlEv.target.result, orientation, (corrected) => {
+          results[i] = corrected;
+          processed++;
+          if (processed === files.length) {
+            results.forEach(r => resCurrentPhotos.push(r));
+            renderResPhotoStrip();
+          }
+        });
+      };
+      urlReader.readAsDataURL(file);
+    };
+    arrReader.readAsArrayBuffer(file);
+  });
+  input.value = '';
+}
+
+function renderResPhotoStrip() {
+  const strip = document.getElementById('res-photo-strip');
+  const addBtn = document.getElementById('res-photo-add-btn');
+  const fileInput = document.getElementById('res-file-input');
+  strip.innerHTML = '';
+  resCurrentPhotos.forEach((src,i) => {
+    const img = document.createElement('img');
+    img.src = src; img.className = 'photo-thumb'; img.alt = 'Photo '+(i+1);
+    strip.appendChild(img);
+  });
+  strip.appendChild(addBtn);
+  strip.appendChild(fileInput);
+  document.getElementById('res-photo-count-label').textContent = resCurrentPhotos.length + ' added';
 }
 
 // ── Door data ──
@@ -907,14 +1238,23 @@ function renderPhotoStrip() {
 
 // ── Summary ──
 function renderSummary() {
-  const complete = doors.filter(isComplete).length;
-  document.getElementById('summary-count-text').textContent =
-    `${doors.length} door${doors.length===1?'':'s'} · ${complete} complete`;
+  const activeDoors = jobType === 'residential' ? resDoors : doors;
+  const activePhotoData = jobType === 'residential' ? resPhotoData : photoData;
+  const complete = activeDoors.filter(d => jobType === 'residential' ? isResComplete(d) : isComplete(d)).length;
 
-  document.getElementById('summary-list').innerHTML = doors.map((d,i) => {
-    const photos = (photoData[d.id]||[]).length;
+  document.getElementById('summary-count-text').textContent =
+    `${activeDoors.length} door${activeDoors.length===1?'':'s'} · ${complete} complete · ${jobType}`;
+
+  // Update back button to go to right survey
+  document.querySelector('#page-summary .back-btn').setAttribute('onclick',
+    jobType === 'residential' ? 'goToSurvey()' : 'goToSurvey()');
+
+  document.getElementById('summary-list').innerHTML = activeDoors.map((d,i) => {
+    const photos = (activePhotoData[d.id]||[]).length;
     const label = d.name || ('Door ' + d.doorNo);
-    const sub = [d.planNo ? 'Plan: '+d.planNo : '', d.type, d.cylinder].filter(Boolean).join(' · ') || 'No details';
+    const sub = jobType === 'residential'
+      ? [d.type, d.swing].filter(Boolean).join(' · ') || 'No details'
+      : [d.planNo ? 'Plan: '+d.planNo : '', d.type, d.cylinder].filter(Boolean).join(' · ') || 'No details';
     return `<div class="summary-item" onclick="jumpToDoor(${i})">
       <div class="summary-num">${d.doorNo}</div>
       <div class="summary-text">
@@ -927,16 +1267,27 @@ function renderSummary() {
 }
 
 function jumpToDoor(idx) {
-  currentIdx = idx;
-  currentPhotos = photoData[doors[idx].id] ? [...photoData[doors[idx].id]] : [];
-  loadDoor(idx);
-  renderTabs();
-  showPage('page-survey');
+  if (jobType === 'residential') {
+    resCurrentIdx = idx;
+    resCurrentPhotos = resPhotoData[resDoors[idx].id] ? [...resPhotoData[resDoors[idx].id]] : [];
+    loadResDoor(idx);
+    renderResTabs();
+    showPage('page-survey-res');
+  } else {
+    currentIdx = idx;
+    currentPhotos = photoData[doors[idx].id] ? [...photoData[doors[idx].id]] : [];
+    loadDoor(idx);
+    renderTabs();
+    showPage('page-survey');
+  }
 }
 
 // ── Export PDF ──
 function exportPDF() {
-  if (doors.length === 0) { showToast('No doors to export'); return; }
+  const activeDoors = jobType === 'residential' ? resDoors : doors;
+  const activePhotoData = jobType === 'residential' ? resPhotoData : photoData;
+
+  if (activeDoors.length === 0) { showToast('No doors to export'); return; }
   const { jsPDF } = window.jspdf;
   if (!jsPDF) { showToast('PDF library not loaded'); return; }
 
@@ -950,6 +1301,7 @@ function exportPDF() {
   const dateStr = dateVal
     ? new Date(dateVal).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})
     : new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'});
+  const typeLabel = jobType === 'residential' ? 'Residential' : 'Commercial';
 
   let y = 0;
 
@@ -957,7 +1309,7 @@ function exportPDF() {
   doc.rect(0,0,210,30,'F');
   doc.setTextColor(255,255,255);
   doc.setFontSize(16); doc.setFont(undefined,'bold');
-  doc.text('Door Survey Report', margin, 13);
+  doc.text(`Door Survey Report — ${typeLabel}`, margin, 13);
   doc.setFontSize(9); doc.setFont(undefined,'normal');
   doc.text('Emmerson Locksmiths & Security', margin, 21);
   doc.text(dateStr, W-margin, 13, {align:'right'});
@@ -978,30 +1330,37 @@ function exportPDF() {
   }
   y += 2;
 
-  const complete = doors.filter(isComplete).length;
-  const totalPh = Object.values(photoData).reduce((a,b)=>a+b.length,0);
+  const complete = activeDoors.filter(d => jobType === 'residential' ? isResComplete(d) : isComplete(d)).length;
+  const totalPh = Object.values(activePhotoData).reduce((a,b)=>a+b.length,0);
   doc.setFontSize(9); doc.setFont(undefined,'normal'); doc.setTextColor(120,120,120);
-  doc.text(`${doors.length} door${doors.length===1?'':'s'} surveyed · ${complete} complete · ${totalPh} photo${totalPh===1?'':'s'}`, margin, y);
+  doc.text(`${activeDoors.length} door${activeDoors.length===1?'':'s'} surveyed · ${complete} complete · ${totalPh} photo${totalPh===1?'':'s'}`, margin, y);
   y += 6;
   doc.setDrawColor(200,210,220); doc.setLineWidth(0.4);
   doc.line(margin, y, W-margin, y); y += 7;
 
-  doors.forEach((d, idx) => {
-    const photos = photoData[d.id] || [];
+  activeDoors.forEach((d, idx) => {
+    const photos = activePhotoData[d.id] || [];
     if (y + 40 > 275) { doc.addPage(); y = margin; }
 
     const doorLabel = d.name ? `Door ${d.doorNo} — ${d.name}` : `Door ${d.doorNo}`;
     doc.setFillColor(232,240,248);
     doc.rect(margin, y-4, contentW, 8, 'F');
     doc.setTextColor(26,58,92); doc.setFontSize(11); doc.setFont(undefined,'bold');
-    doc.text(doorLabel + (d.planNo ? '  ·  Plan: '+d.planNo : ''), margin+3, y+1);
+    const planPart = (jobType === 'commercial' && d.planNo) ? '  ·  Plan: '+d.planNo : '';
+    doc.text(doorLabel + planPart, margin+3, y+1);
     y += 8;
 
-    const fields = [
-      ['Door type', d.type], ['Swing', d.swing],
-      ['Hardware', d.hardware], ['Colour', d.colour],
-      ['Cylinder', d.cylinder], ['Notes', d.notes],
-    ].filter(([,v])=>v);
+    const fields = jobType === 'residential'
+      ? [
+          ['Door type', d.type], ['Swing', d.swing],
+          ['Hardware', d.hardware], ['Colour', d.colour],
+          ['Notes', d.notes],
+        ].filter(([,v])=>v)
+      : [
+          ['Door type', d.type], ['Swing', d.swing],
+          ['Hardware', d.hardware], ['Colour', d.colour],
+          ['Cylinder', d.cylinder], ['Notes', d.notes],
+        ].filter(([,v])=>v);
 
     doc.setFontSize(9);
     fields.forEach(([label,val]) => {
@@ -1033,7 +1392,7 @@ function exportPDF() {
     }
 
     y += 6;
-    if (idx < doors.length-1) {
+    if (idx < activeDoors.length-1) {
       doc.setDrawColor(220,225,230); doc.setLineWidth(0.3);
       doc.line(margin, y, W-margin, y); y += 5;
     }
@@ -1043,7 +1402,7 @@ function exportPDF() {
   doc.text('Generated by Emmerson Locksmiths & Security — emmersonlocksmiths.com.au', margin, 290);
 
   const sitePart = (site||client||'survey').replace(/\s+/g,'-').toLowerCase();
-  doc.save(`door-survey-${sitePart}-${new Date().toISOString().slice(0,10)}.pdf`);
+  doc.save(`door-survey-${typeLabel.toLowerCase()}-${sitePart}-${new Date().toISOString().slice(0,10)}.pdf`);
   showToast('PDF saved');
 }
 
