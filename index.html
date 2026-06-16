@@ -648,36 +648,58 @@
         <input type="text" id="f-name" placeholder="e.g. Front entry, Server room, Fire exit…" />
       </div>
 
-      <!-- Door -->
-      <div class="section-label"><i class="ti ti-door"></i>Door</div>
-      <div class="two-col">
-        <div class="field">
-          <label>Type</label>
-          <select id="f-type"></select>
-        </div>
-        <div class="field">
-          <label>Swing</label>
-          <select id="f-swing"></select>
-        </div>
+      <!-- Area -->
+      <div class="field">
+        <label for="f-area">Area</label>
+        <input type="text" id="f-area" placeholder="e.g. Level 1, Warehouse, Reception…" />
       </div>
 
-      <!-- Hardware -->
-      <div class="section-label"><i class="ti ti-tool"></i>Hardware</div>
-      <div class="two-col">
-        <div class="field">
-          <label>Type</label>
-          <select id="f-hardware"></select>
-        </div>
-        <div class="field">
-          <label>Colour</label>
-          <select id="f-colour"></select>
+      <!-- Door -->
+      <div class="section-label"><i class="ti ti-door"></i>Door</div>
+      <div class="field">
+        <label>Type</label>
+        <select id="f-type"></select>
+      </div>
+
+      <!-- What to Supply -->
+      <div class="field">
+        <label>What to supply and install?</label>
+        <div class="checkbox-list" id="f-supply-list">
+          <label class="checkbox-item"><input type="checkbox" value="Cylinder" /> Cylinder</label>
+          <label class="checkbox-item"><input type="checkbox" value="Lock" /> Lock</label>
+          <label class="checkbox-item"><input type="checkbox" value="Hardware" /> Hardware</label>
+          <label class="checkbox-item"><input type="checkbox" value="Rekey only" /> Rekey only</label>
         </div>
       </div>
 
       <!-- Cylinder -->
-      <div class="section-label"><i class="ti ti-key"></i>Cylinder</div>
       <div class="field">
-        <select id="f-cylinder"></select>
+        <label>Cylinder</label>
+        <div class="checkbox-list" id="f-cylinder-list">
+        <label class="checkbox-item"><input type="checkbox" value="570 - Oval Cylinder" onchange="onCylinderCheck()" /> 570 - Oval Cylinder</label>
+        <label class="checkbox-item"><input type="checkbox" value="201 - Round Cylinder" onchange="onCylinderCheck()" /> 201 - Round Cylinder</label>
+        <label class="checkbox-item"><input type="checkbox" value="8221 - PD Cylinder" onchange="onCylinderCheck()" /> 8221 - PD Cylinder</label>
+        <label class="checkbox-item"><input type="checkbox" value="530 Cylinder" onchange="onCylinderCheck()" /> 530 Cylinder</label>
+        <label class="checkbox-item"><input type="checkbox" value="001 Barrel" onchange="onCylinderCheck()" /> 001 Barrel</label>
+        <label class="checkbox-item"><input type="checkbox" value="Euro Cylinder Fixed Cam" onchange="onCylinderCheck()" /> Euro Cylinder Fixed Cam</label>
+        <label class="checkbox-item"><input type="checkbox" value="Euro Cylinder Lazy Cam" onchange="onCylinderCheck()" /> Euro Cylinder Lazy Cam</label>
+        <label class="checkbox-item"><input type="checkbox" value="Kawneer Cylinder" onchange="onCylinderCheck()" /> Kawneer Cylinder</label>
+        <label class="checkbox-item"><input type="checkbox" value="Other" onchange="onCylinderCheck()" /> Other</label>
+      </div>
+      <div class="field" id="cam-field" style="display:none;">
+        <label>Cam (570 - Oval Cylinder)</label>
+        <select id="f-cam">
+          <option value="">— Select —</option>
+          <option>Z Cam</option>
+          <option>X Cam</option>
+          <option>W Cam</option>
+          <option>U Cam</option>
+          <option>V Cam</option>
+          <option>X7 Cam</option>
+          <option>Y Cam</option>
+          <option>Other</option>
+        </select>
+      </div>
       </div>
 
       <!-- Notes -->
@@ -864,11 +886,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 
-const CYLINDERS = ['570 Oval Cylinder','201 Cylinder','8221 Cylinder','530 Cylinder','Euro Cylinder Fixed Cam','Euro Cylinder Lazy Cam','Other'];
-const DOOR_TYPES = ['Timber','Aluminium','Glass','Steel','UPVC','Fire door','Other'];
-const HARDWARE = ['Lever handle','Knob','Pull handle','Panic bar / exit device','Digital lock','Sliding','None','Other'];
+const CYLINDERS = ['570 - Oval Cylinder','201 - Round Cylinder','8221 - PD Cylinder','530 Cylinder','Euro Cylinder Fixed Cam','Euro Cylinder Lazy Cam','Kawneer Cylinder','Other'];
+const DOOR_TYPES = ['Timber','Glass Aluminium','Glass','Auto Door','Fire door','Padlock','Other'];
+const HARDWARE = ['Commercial lever handle','Commercial knob set','Mortise lock','Cylinder only','Security door','Roller door','Cupboard / Drawer','Padlock','Deadlock','Window','Other'];
 const COLOURS = ['Silver / Satin','Brushed chrome','Polished chrome','Matte black','Antique brass','Gold','White','Brown','Other'];
-const SWING = ['Open in','Open out','Sliding','Double swing'];
+const SWING = ['Swinging','Sliding','Other'];
 
 let doors = [];
 let currentIdx = 0;
@@ -905,10 +927,6 @@ function populateSel(id, opts) {
 }
 function initSelects() {
   populateSel('f-type', DOOR_TYPES);
-  populateSel('f-swing', SWING);
-  populateSel('f-hardware', HARDWARE);
-  populateSel('f-colour', COLOURS);
-  populateSel('f-cylinder', CYLINDERS);
   // Residential selects
   populateSel('rf-type', ['Timber', 'Glass Aluminium', 'Roller door', 'Security door', 'Window', 'Cupboard / Drawer', 'Other']);
   populateSel('rf-swing', ['Sliding','Swinging','Other']);
@@ -928,6 +946,17 @@ function incrementPlanNo(val) {
   if (!parsed) return val; // can't increment, return as-is
   const nextNum = String(parsed.num + 1).padStart(parsed.digits, '0');
   return parsed.prefix + nextNum + parsed.suffix;
+}
+
+function onCylinderCheck() {
+  const checked = Array.from(document.querySelectorAll('#f-cylinder-list input[type="checkbox"]:checked')).map(cb => cb.value);
+  const camField = document.getElementById('cam-field');
+  if (checked.includes('570 - Oval Cylinder')) {
+    camField.style.display = 'block';
+  } else {
+    camField.style.display = 'none';
+    document.getElementById('f-cam').value = '';
+  }
 }
 
 function onPlanNoInput(val) {
@@ -1157,20 +1186,27 @@ function renderResPhotoStrip() {
 
 // ── Door data ──
 function freshDoor(num, planNo) {
-  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', planNo: planNo || '', type: '', swing: '', hardware: '', colour: '', cylinder: '', notes: '' };
+  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', area: planNo ? '' : '', planNo: planNo || '', type: '', swing: '', hardware: '', colour: '', cylinder: '', notes: '' };
 }
 
 function loadDoor(idx) {
   const d = doors[idx];
   currentPhotos = photoData[d.id] ? [...photoData[d.id]] : [];
   document.getElementById('f-name').value = d.name;
+  document.getElementById('f-area').value = d.area || '';
   document.getElementById('f-doorNo').value = d.doorNo;
   document.getElementById('f-planNo').value = d.planNo;
   document.getElementById('f-type').value = d.type;
-  document.getElementById('f-swing').value = d.swing;
-  document.getElementById('f-hardware').value = d.hardware;
-  document.getElementById('f-colour').value = d.colour;
-  document.getElementById('f-cylinder').value = d.cylinder;
+  const supply = Array.isArray(d.supply) ? d.supply : (d.supply ? [d.supply] : []);
+  document.querySelectorAll('#f-supply-list input[type="checkbox"]').forEach(cb => {
+    cb.checked = supply.includes(cb.value);
+  });
+  const cylinders = Array.isArray(d.cylinder) ? d.cylinder : (d.cylinder ? [d.cylinder] : []);
+  document.querySelectorAll('#f-cylinder-list input[type="checkbox"]').forEach(cb => {
+    cb.checked = cylinders.includes(cb.value);
+  });
+  onCylinderCheck();
+  document.getElementById('f-cam').value = d.cam || '';
   document.getElementById('f-notes').value = d.notes;
 
   // Update heading
@@ -1188,13 +1224,13 @@ function loadDoor(idx) {
 function readForm() {
   return {
     name:     document.getElementById('f-name').value.trim(),
+    area:     document.getElementById('f-area').value.trim(),
     doorNo:   document.getElementById('f-doorNo').value.trim(),
     planNo:   document.getElementById('f-planNo').value.trim(),
     type:     document.getElementById('f-type').value,
-    swing:    document.getElementById('f-swing').value,
-    hardware: document.getElementById('f-hardware').value,
-    colour:   document.getElementById('f-colour').value,
-    cylinder: document.getElementById('f-cylinder').value,
+    supply:   Array.from(document.querySelectorAll('#f-supply-list input[type="checkbox"]:checked')).map(cb => cb.value),
+    cylinder: Array.from(document.querySelectorAll('#f-cylinder-list input[type="checkbox"]:checked')).map(cb => cb.value),
+    cam:      document.getElementById('f-cam').value,
     notes:    document.getElementById('f-notes').value.trim(),
   };
 }
@@ -1221,9 +1257,10 @@ function saveAndNext() {
   const isLast = currentIdx === doors.length - 1;
 
   if (isLast) {
-    // Work out the next plan/stamp number
     const nextPlanNo = incrementPlanNo(currentDoor.planNo);
     const nextDoor = freshDoor(doors.length + 1, nextPlanNo !== currentDoor.planNo ? nextPlanNo : '');
+    // Carry area forward
+    nextDoor.area = currentDoor.area || '';
     doors.push(nextDoor);
   }
 
@@ -1481,14 +1518,18 @@ function renderSummary() {
           <div class="summary-field-label">Plan / stamp no.</div>
           <div class="summary-field-value">${d.planNo}</div>
         </div>` : ''}
+        ${d.area ? `<div class="summary-field">
+          <div class="summary-field-label">Area</div>
+          <div class="summary-field-value">${d.area}</div>
+        </div>` : ''}
         <div class="summary-field">
           <div class="summary-field-label">Door type</div>
           <div class="summary-field-value${!d.type?' empty':''}">${d.type||'Not recorded'}</div>
         </div>
-        <div class="summary-field">
-          <div class="summary-field-label">Swing</div>
-          <div class="summary-field-value${!d.swing?' empty':''}">${d.swing||'Not recorded'}</div>
-        </div>
+        ${d.supply && d.supply.length ? `<div class="summary-field">
+          <div class="summary-field-label">What to supply and install</div>
+          <div class="summary-field-value">${Array.isArray(d.supply) ? d.supply.join(', ') : d.supply}</div>
+        </div>` : ''}
         <div class="summary-field">
           <div class="summary-field-label">Hardware</div>
           <div class="summary-field-value${!d.hardware?' empty':''}">${d.hardware||'Not recorded'}</div>
@@ -1499,7 +1540,9 @@ function renderSummary() {
         </div>
         <div class="summary-field">
           <div class="summary-field-label">Cylinder</div>
-          <div class="summary-field-value${!d.cylinder?' empty':''}">${d.cylinder||'Not recorded'}</div>
+          <div class="summary-field-value${(!d.cylinder||!d.cylinder.length)?' empty':''}">
+            ${Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ')+(d.cam?' — '+d.cam:'') : 'Not recorded'}
+          </div>
         </div>
         ${d.notes ? `<div class="summary-field">
           <div class="summary-field-label">Notes</div>
@@ -1623,9 +1666,12 @@ function exportPDF() {
           ['Notes', d.notes],
         ].filter(([,v])=>v)
       : [
-          ['Door type', d.type], ['Swing', d.swing],
+          ['Door type', d.type],
+          ['What to supply and install', Array.isArray(d.supply) && d.supply.length ? d.supply.join(', ') : null],
+          ['Area', d.area],
           ['Hardware', d.hardware], ['Colour', d.colour],
-          ['Cylinder', d.cylinder], ['Notes', d.notes],
+          ['Cylinder', Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ') : null],
+          ['Cam', d.cam], ['Notes', d.notes],
         ].filter(([,v])=>v);
 
     doc.setFontSize(9);
