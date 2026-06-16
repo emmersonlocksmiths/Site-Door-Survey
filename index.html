@@ -39,7 +39,6 @@
     padding-bottom: 60px;
   }
 
-  /* ── Header ── */
   .app-header {
     background: var(--brand);
     color: #fff;
@@ -69,14 +68,11 @@
   }
   .back-btn i { font-size: 18px; }
 
-  /* ── Pages ── */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* ── Wrap ── */
   .wrap { max-width: 480px; margin: 0 auto; padding: 16px 14px 0; }
 
-  /* ── Fields ── */
   .field { margin-bottom: 12px; }
   .field label {
     font-size: 12px; color: var(--text-muted);
@@ -111,7 +107,7 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  /* ── Detail page ── */
+  /* Detail page */
   .page-intro { margin-bottom: 20px; }
   .page-intro h2 { font-size: 22px; font-weight: 600; color: var(--brand); letter-spacing: -0.02em; margin-bottom: 4px; }
   .page-intro p { font-size: 14px; color: var(--text-muted); }
@@ -136,7 +132,7 @@
   .next-btn:active { opacity: 0.85; }
   .next-btn i { font-size: 20px; }
 
-  /* ── Job summary bar ── */
+  /* Job summary bar */
   .job-summary-bar {
     background: var(--brand-light);
     border: 0.5px solid rgba(26,58,92,0.15);
@@ -154,11 +150,8 @@
     font-family: inherit; white-space: nowrap;
   }
 
-  /* ── Door tabs ── */
-  .door-tabs-wrap {
-    margin-bottom: 14px;
-    position: relative;
-  }
+  /* Door tabs */
+  .door-tabs-wrap { margin-bottom: 14px; }
   .door-tabs {
     display: flex;
     gap: 6px;
@@ -168,7 +161,6 @@
     -ms-overflow-style: none;
   }
   .door-tabs::-webkit-scrollbar { display: none; }
-
   .door-tab {
     flex-shrink: 0;
     padding: 6px 13px;
@@ -184,23 +176,17 @@
     white-space: nowrap;
     transition: background 0.15s, color 0.15s;
   }
-  .door-tab.active {
-    background: var(--brand);
-    color: #fff;
-    border-color: var(--brand);
-  }
-  .door-tab.saved .tick {
+  .door-tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .door-tab .tick {
     width: 14px; height: 14px;
     background: var(--success);
     border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
     font-size: 9px; color: #fff;
   }
-  .door-tab.active .tick {
-    background: rgba(255,255,255,0.3);
-  }
+  .door-tab.active .tick { background: rgba(255,255,255,0.3); }
 
-  /* ── Door form card ── */
+  /* Door form card */
   .door-form-card {
     background: var(--surface);
     border-radius: var(--radius-lg);
@@ -208,18 +194,15 @@
     padding: 16px;
     margin-bottom: 14px;
   }
-
   .door-form-heading {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 16px;
     padding-bottom: 12px;
     border-bottom: 0.5px solid var(--border);
   }
-  .door-form-heading h2 {
-    font-size: 18px; font-weight: 600; color: var(--brand);
-  }
-  .door-form-heading .door-counter {
-    font-size: 12px; color: var(--text-muted);
+  .door-form-heading h2 { font-size: 18px; font-weight: 600; color: var(--brand); }
+  .door-counter {
+    font-size: 12px;
     background: var(--brand-light);
     color: var(--brand);
     border-radius: 20px; padding: 3px 10px;
@@ -232,10 +215,35 @@
     color: var(--text-muted); margin-bottom: 8px; margin-top: 14px;
     display: flex; align-items: center; gap: 5px;
   }
-  .section-label:first-of-type { margin-top: 0; }
   .section-label i { font-size: 13px; }
 
-  /* ── Photos ── */
+  /* Door name field — highlighted */
+  .door-name-field input {
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--brand-light);
+    border-color: rgba(26,58,92,0.2);
+    color: var(--brand);
+  }
+  .door-name-field input:focus {
+    background: var(--surface);
+    color: var(--text);
+  }
+  .door-name-field input::placeholder {
+    color: rgba(26,58,92,0.4);
+    font-weight: 400;
+  }
+
+  /* Stamp hint */
+  .stamp-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: none;
+  }
+  .stamp-hint.visible { display: block; }
+
+  /* Photos */
   .photo-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
   .photo-thumb {
     width: 68px; height: 68px; object-fit: cover;
@@ -252,9 +260,8 @@
   .photo-add-btn:active { background: var(--brand-light); }
   .file-input { display: none; }
 
-  /* ── Action buttons ── */
+  /* Action buttons */
   .door-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-
   .btn-save-next {
     width: 100%; padding: 15px;
     background: var(--brand); color: #fff;
@@ -265,9 +272,7 @@
   }
   .btn-save-next:active { opacity: 0.85; }
   .btn-save-next i { font-size: 20px; }
-
   .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
   .btn {
     padding: 12px 10px; border-radius: var(--radius-lg);
     font-size: 14px; font-family: inherit; font-weight: 500;
@@ -278,13 +283,10 @@
   }
   .btn:active { opacity: 0.8; }
   .btn-danger { color: var(--danger); border-color: rgba(180,60,40,0.3); }
-  .btn-export {
-    background: var(--surface); color: var(--brand);
-    border-color: var(--brand);
-  }
+  .btn-export { color: var(--brand); border-color: var(--brand); }
   .btn i { font-size: 18px; }
 
-  /* ── Summary page ── */
+  /* Summary page */
   .summary-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
   .summary-item {
     background: var(--surface);
@@ -307,7 +309,6 @@
   .summary-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
   .summary-arrow { font-size: 18px; color: var(--text-muted); }
 
-  /* ── Toast ── */
   .toast {
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%) translateY(80px);
@@ -318,11 +319,51 @@
     z-index: 200; white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Confirm modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 300;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--surface);
+    border-radius: 18px 18px 0 0;
+    padding: 24px 20px 36px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .modal-title {
+    font-size: 16px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .modal-msg {
+    font-size: 14px; color: var(--text-muted); margin-bottom: 20px;
+  }
+  .modal-btns { display: flex; flex-direction: column; gap: 10px; }
+  .modal-confirm {
+    width: 100%; padding: 14px;
+    background: var(--danger); color: #fff;
+    border: none; border-radius: var(--radius-lg);
+    font-size: 15px; font-family: inherit; font-weight: 600;
+    cursor: pointer;
+  }
+  .modal-cancel {
+    width: 100%; padding: 14px;
+    background: var(--surface2); color: var(--text);
+    border: 0.5px solid var(--border-strong); border-radius: var(--radius-lg);
+    font-size: 15px; font-family: inherit; font-weight: 500;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
-<!-- ══ PAGE 1: Job Details ══ -->
+<!-- PAGE 1: Job Details -->
 <div class="page active" id="page-details">
   <header class="app-header">
     <div>
@@ -360,7 +401,7 @@
   </div>
 </div>
 
-<!-- ══ PAGE 2: Door Survey ══ -->
+<!-- PAGE 2: Door Survey -->
 <div class="page" id="page-survey">
   <header class="app-header">
     <button class="back-btn" onclick="goToDetails()">
@@ -380,18 +421,24 @@
       </button>
     </div>
 
-    <!-- Door tabs -->
     <div class="door-tabs-wrap">
       <div class="door-tabs" id="door-tabs"></div>
     </div>
 
-    <!-- Door form -->
     <div class="door-form-card">
       <div class="door-form-heading">
         <h2 id="form-door-title">Door 1</h2>
         <span class="door-counter" id="form-door-counter">Door 1 of 1</span>
       </div>
 
+      <!-- Door name -->
+      <div class="field door-name-field">
+        <label for="f-name">Door name</label>
+        <input type="text" id="f-name" placeholder="e.g. Front entry, Server room, Fire exit…" />
+      </div>
+
+      <!-- Identification -->
+      <div class="section-label"><i class="ti ti-hash"></i>Identification</div>
       <div class="two-col">
         <div class="field">
           <label>Door no.</label>
@@ -399,10 +446,12 @@
         </div>
         <div class="field">
           <label>Plan / stamp no.</label>
-          <input type="text" id="f-planNo" placeholder="e.g. D-04" />
+          <input type="text" id="f-planNo" placeholder="e.g. D-04" oninput="onPlanNoInput(this.value)" />
+          <div class="stamp-hint" id="stamp-hint">Next door will auto-increment from this</div>
         </div>
       </div>
 
+      <!-- Door -->
       <div class="section-label"><i class="ti ti-door"></i>Door</div>
       <div class="two-col">
         <div class="field">
@@ -415,6 +464,7 @@
         </div>
       </div>
 
+      <!-- Hardware -->
       <div class="section-label"><i class="ti ti-tool"></i>Hardware</div>
       <div class="two-col">
         <div class="field">
@@ -427,17 +477,23 @@
         </div>
       </div>
 
+      <!-- Cylinder -->
       <div class="section-label"><i class="ti ti-key"></i>Cylinder</div>
       <div class="field">
         <select id="f-cylinder"></select>
       </div>
 
+      <!-- Notes -->
       <div class="section-label"><i class="ti ti-note"></i>Notes</div>
       <div class="field">
         <textarea id="f-notes" placeholder="Additional notes…"></textarea>
       </div>
 
-      <div class="section-label"><i class="ti ti-camera"></i>Photos <span id="photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">0 added</span></div>
+      <!-- Photos -->
+      <div class="section-label">
+        <i class="ti ti-camera"></i>Photos
+        <span id="photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">0 added</span>
+      </div>
       <div class="photo-strip" id="photo-strip">
         <div class="photo-add-btn" id="photo-add-btn" onclick="document.getElementById('file-input').click()">
           <i class="ti ti-plus"></i>
@@ -446,7 +502,6 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="door-actions">
       <button class="btn-save-next" id="btn-save-next" onclick="saveAndNext()">
         Save &amp; next door <i class="ti ti-arrow-right"></i>
@@ -464,7 +519,7 @@
   </div>
 </div>
 
-<!-- ══ PAGE 3: Summary & Export ══ -->
+<!-- PAGE 3: Summary -->
 <div class="page" id="page-summary">
   <header class="app-header">
     <button class="back-btn" onclick="goToSurvey()">
@@ -484,6 +539,18 @@
   </div>
 </div>
 
+<!-- Confirm modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title">Delete door?</div>
+    <div class="modal-msg" id="modal-msg">This cannot be undone.</div>
+    <div class="modal-btns">
+      <button class="modal-confirm" id="modal-confirm">Delete</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -495,17 +562,15 @@ const HARDWARE = ['Lever handle','Knob','Pull handle','Panic bar / exit device',
 const COLOURS = ['Silver / Satin','Brushed chrome','Polished chrome','Matte black','Antique brass','Gold','White','Brown','Other'];
 const SWING = ['Open in','Open out','Sliding','Double swing'];
 
-let doors = [];       // all saved door objects
-let currentIdx = 0;  // which door we're currently editing (index into doors[])
-let photoData = {};   // doorId -> [base64, ...]
-let currentPhotos = []; // photos for the current (possibly unsaved) door
+let doors = [];
+let currentIdx = 0;
+let photoData = {};
+let currentPhotos = [];
 
-// Populate selects
 function populateSel(id, opts) {
   const el = document.getElementById(id);
   el.innerHTML = '<option value="">— Select —</option>' + opts.map(o=>`<option value="${o}">${o}</option>`).join('');
 }
-
 function initSelects() {
   populateSel('f-type', DOOR_TYPES);
   populateSel('f-swing', SWING);
@@ -514,8 +579,33 @@ function initSelects() {
   populateSel('f-cylinder', CYLINDERS);
 }
 
-// ── Navigation ──
+// ── Plan/stamp auto-increment logic ──
+// Split a string like "D-04" into prefix "D-" and number 4
+function parsePlanNo(val) {
+  if (!val) return null;
+  const match = val.match(/^(.*?)(\d+)(\D*)$/);
+  if (!match) return null;
+  return { prefix: match[1], num: parseInt(match[2], 10), suffix: match[3], digits: match[2].length };
+}
 
+function incrementPlanNo(val) {
+  const parsed = parsePlanNo(val);
+  if (!parsed) return val; // can't increment, return as-is
+  const nextNum = String(parsed.num + 1).padStart(parsed.digits, '0');
+  return parsed.prefix + nextNum + parsed.suffix;
+}
+
+function onPlanNoInput(val) {
+  const hint = document.getElementById('stamp-hint');
+  if (val && parsePlanNo(val)) {
+    hint.textContent = `Next door: ${incrementPlanNo(val)}`;
+    hint.classList.add('visible');
+  } else {
+    hint.classList.remove('visible');
+  }
+}
+
+// ── Navigation ──
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -533,7 +623,6 @@ function startSurvey() {
   document.getElementById('summary-ref').textContent = displayRef || 'No reference';
 
   if (doors.length === 0) {
-    // Start with door 1
     doors = [freshDoor(1)];
     currentIdx = 0;
     currentPhotos = [];
@@ -561,14 +650,14 @@ function goToSummary() {
 }
 
 // ── Door data ──
-
-function freshDoor(num) {
-  return { id: Date.now() + Math.random(), doorNo: String(num), planNo: '', type: '', swing: '', hardware: '', colour: '', cylinder: '', notes: '' };
+function freshDoor(num, planNo) {
+  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', planNo: planNo || '', type: '', swing: '', hardware: '', colour: '', cylinder: '', notes: '' };
 }
 
 function loadDoor(idx) {
   const d = doors[idx];
   currentPhotos = photoData[d.id] ? [...photoData[d.id]] : [];
+  document.getElementById('f-name').value = d.name;
   document.getElementById('f-doorNo').value = d.doorNo;
   document.getElementById('f-planNo').value = d.planNo;
   document.getElementById('f-type').value = d.type;
@@ -577,22 +666,30 @@ function loadDoor(idx) {
   document.getElementById('f-colour').value = d.colour;
   document.getElementById('f-cylinder').value = d.cylinder;
   document.getElementById('f-notes').value = d.notes;
-  document.getElementById('form-door-title').textContent = 'Door ' + d.doorNo;
+
+  // Update heading
+  const label = d.name || ('Door ' + d.doorNo);
+  document.getElementById('form-door-title').textContent = label;
   document.getElementById('form-door-counter').textContent = `Door ${idx+1} of ${doors.length}`;
+
+  // Stamp hint
+  onPlanNoInput(d.planNo);
+
   renderPhotoStrip();
   updateSaveNextBtn(idx);
 }
 
 function readForm() {
   return {
-    doorNo: document.getElementById('f-doorNo').value.trim(),
-    planNo: document.getElementById('f-planNo').value.trim(),
-    type: document.getElementById('f-type').value,
-    swing: document.getElementById('f-swing').value,
+    name:     document.getElementById('f-name').value.trim(),
+    doorNo:   document.getElementById('f-doorNo').value.trim(),
+    planNo:   document.getElementById('f-planNo').value.trim(),
+    type:     document.getElementById('f-type').value,
+    swing:    document.getElementById('f-swing').value,
     hardware: document.getElementById('f-hardware').value,
-    colour: document.getElementById('f-colour').value,
+    colour:   document.getElementById('f-colour').value,
     cylinder: document.getElementById('f-cylinder').value,
-    notes: document.getElementById('f-notes').value.trim(),
+    notes:    document.getElementById('f-notes').value.trim(),
   };
 }
 
@@ -614,12 +711,16 @@ function updateSaveNextBtn(idx) {
 
 function saveAndNext() {
   autoSaveCurrent();
+  const currentDoor = doors[currentIdx];
   const isLast = currentIdx === doors.length - 1;
+
   if (isLast) {
-    // Add a new door
-    const nextNum = doors.length + 1;
-    doors.push(freshDoor(nextNum));
+    // Work out the next plan/stamp number
+    const nextPlanNo = incrementPlanNo(currentDoor.planNo);
+    const nextDoor = freshDoor(doors.length + 1, nextPlanNo !== currentDoor.planNo ? nextPlanNo : '');
+    doors.push(nextDoor);
   }
+
   currentIdx++;
   currentPhotos = [];
   loadDoor(currentIdx);
@@ -628,40 +729,70 @@ function saveAndNext() {
   window.scrollTo(0,0);
 }
 
+function showModal(title, msg, confirmLabel, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-msg').textContent = msg;
+  document.getElementById('modal-confirm').textContent = confirmLabel;
+  document.getElementById('modal-confirm').onclick = () => { closeModal(); onConfirm(); };
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
 function deleteCurrent() {
+  const d = doors[currentIdx];
+  const label = d.name || ('Door ' + d.doorNo);
+
   if (doors.length === 1) {
-    if (!confirm('This is the only door. Clear it?')) return;
-    doors[0] = freshDoor(1);
-    currentIdx = 0;
-    currentPhotos = [];
-    loadDoor(0);
-    renderTabs();
+    showModal(
+      'Clear this door?',
+      'This is the only door. All its details will be cleared.',
+      'Clear door',
+      () => {
+        const cleared = freshDoor(1);
+        doors[0] = cleared;
+        currentIdx = 0;
+        currentPhotos = [];
+        loadDoor(0);
+        renderTabs();
+        showToast('Door cleared');
+      }
+    );
     return;
   }
-  if (!confirm('Delete Door ' + doors[currentIdx].doorNo + '?')) return;
-  delete photoData[doors[currentIdx].id];
-  doors.splice(currentIdx, 1);
-  // Re-number
-  doors.forEach((d,i) => { d.doorNo = String(i+1); });
-  if (currentIdx >= doors.length) currentIdx = doors.length - 1;
-  currentPhotos = photoData[doors[currentIdx].id] ? [...photoData[doors[currentIdx].id]] : [];
-  loadDoor(currentIdx);
-  renderTabs();
+
+  showModal(
+    'Delete ' + label + '?',
+    'This door will be removed from the survey. This cannot be undone.',
+    'Delete door',
+    () => {
+      delete photoData[doors[currentIdx].id];
+      doors.splice(currentIdx, 1);
+      doors.forEach((door, i) => { door.doorNo = String(i + 1); });
+      if (currentIdx >= doors.length) currentIdx = doors.length - 1;
+      currentPhotos = photoData[doors[currentIdx].id] ? [...photoData[doors[currentIdx].id]] : [];
+      loadDoor(currentIdx);
+      renderTabs();
+      window.scrollTo(0, 0);
+      showToast(label + ' deleted');
+    }
+  );
 }
 
 // ── Tabs ──
-
 function renderTabs() {
   const wrap = document.getElementById('door-tabs');
   wrap.innerHTML = doors.map((d,i) => {
     const active = i === currentIdx;
     const saved = isComplete(d);
+    const label = d.name || ('Door ' + d.doorNo);
     return `<button class="door-tab${active?' active':''}${saved?' saved':''}" onclick="switchTab(${i})">
       ${saved ? `<span class="tick"><i class="ti ti-check" style="font-size:9px;"></i></span>` : ''}
-      Door ${d.doorNo}
+      ${label}
     </button>`;
   }).join('');
-  // Scroll active tab into view
   setTimeout(()=>{
     const tabs = wrap.querySelectorAll('.door-tab');
     if (tabs[currentIdx]) tabs[currentIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
@@ -678,7 +809,6 @@ function switchTab(idx) {
 }
 
 // ── Photos ──
-
 function handlePhotos(input) {
   const files = Array.from(input.files);
   let loaded = 0;
@@ -701,7 +831,7 @@ function renderPhotoStrip() {
   strip.innerHTML = '';
   currentPhotos.forEach((src,i) => {
     const img = document.createElement('img');
-    img.src = src; img.className = 'photo-thumb'; img.alt = 'Photo ' + (i+1);
+    img.src = src; img.className = 'photo-thumb'; img.alt = 'Photo '+(i+1);
     strip.appendChild(img);
   });
   strip.appendChild(addBtn);
@@ -709,21 +839,20 @@ function renderPhotoStrip() {
   document.getElementById('photo-count-label').textContent = currentPhotos.length + ' added';
 }
 
-// ── Summary page ──
-
+// ── Summary ──
 function renderSummary() {
-  const list = document.getElementById('summary-list');
   const complete = doors.filter(isComplete).length;
   document.getElementById('summary-count-text').textContent =
     `${doors.length} door${doors.length===1?'':'s'} · ${complete} complete`;
 
-  list.innerHTML = doors.map((d,i) => {
+  document.getElementById('summary-list').innerHTML = doors.map((d,i) => {
     const photos = (photoData[d.id]||[]).length;
-    const sub = [d.type, d.cylinder].filter(Boolean).join(' · ') || 'No details';
+    const label = d.name || ('Door ' + d.doorNo);
+    const sub = [d.planNo ? 'Plan: '+d.planNo : '', d.type, d.cylinder].filter(Boolean).join(' · ') || 'No details';
     return `<div class="summary-item" onclick="jumpToDoor(${i})">
       <div class="summary-num">${d.doorNo}</div>
       <div class="summary-text">
-        <div class="summary-title">Door ${d.doorNo}${d.planNo?' · Plan: '+d.planNo:''}</div>
+        <div class="summary-title">${label}</div>
         <div class="summary-sub">${sub}${photos?' · '+photos+' photo'+(photos===1?'':'s'):''}</div>
       </div>
       <i class="ti ti-chevron-right summary-arrow"></i>
@@ -740,7 +869,6 @@ function jumpToDoor(idx) {
 }
 
 // ── Export PDF ──
-
 function exportPDF() {
   if (doors.length === 0) { showToast('No doors to export'); return; }
   const { jsPDF } = window.jspdf;
@@ -750,8 +878,8 @@ function exportPDF() {
   const W = 210, margin = 15, contentW = W - margin * 2;
 
   const client = document.getElementById('client-name').value || '';
-  const site = document.getElementById('site-name').value || '';
-  const ref = document.getElementById('job-ref').value || '';
+  const site   = document.getElementById('site-name').value || '';
+  const ref    = document.getElementById('job-ref').value || '';
   const dateVal = document.getElementById('survey-date').value;
   const dateStr = dateVal
     ? new Date(dateVal).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})
@@ -759,7 +887,6 @@ function exportPDF() {
 
   let y = 0;
 
-  // Header
   doc.setFillColor(26,58,92);
   doc.rect(0,0,210,30,'F');
   doc.setTextColor(255,255,255);
@@ -797,15 +924,17 @@ function exportPDF() {
     const photos = photoData[d.id] || [];
     if (y + 40 > 275) { doc.addPage(); y = margin; }
 
+    const doorLabel = d.name ? `Door ${d.doorNo} — ${d.name}` : `Door ${d.doorNo}`;
     doc.setFillColor(232,240,248);
     doc.rect(margin, y-4, contentW, 8, 'F');
     doc.setTextColor(26,58,92); doc.setFontSize(11); doc.setFont(undefined,'bold');
-    doc.text(`Door ${d.doorNo}${d.planNo?' · Plan: '+d.planNo:''}`, margin+3, y+1);
+    doc.text(doorLabel + (d.planNo ? '  ·  Plan: '+d.planNo : ''), margin+3, y+1);
     y += 8;
 
     const fields = [
-      ['Door type', d.type],['Swing', d.swing],['Hardware', d.hardware],
-      ['Colour', d.colour],['Cylinder', d.cylinder],['Notes', d.notes],
+      ['Door type', d.type], ['Swing', d.swing],
+      ['Hardware', d.hardware], ['Colour', d.colour],
+      ['Cylinder', d.cylinder], ['Notes', d.notes],
     ].filter(([,v])=>v);
 
     doc.setFontSize(9);
