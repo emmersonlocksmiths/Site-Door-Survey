@@ -753,7 +753,7 @@
       </div>
 
       <div class="field door-name-field">
-        <label for="rf-name">Door name / location</label>
+        <label for="rf-name">Door location</label>
         <select id="rf-name">
           <option value="">— Select —</option>
           <option>Front</option>
@@ -910,8 +910,8 @@ function initSelects() {
   populateSel('f-colour', COLOURS);
   populateSel('f-cylinder', CYLINDERS);
   // Residential selects
-  populateSel('rf-type', ['Timber', 'Glass Aluminium', 'Roller door', 'Security door', 'Window', 'Other']);
-  populateSel('rf-swing', ['Sliding','Swinging']);
+  populateSel('rf-type', ['Timber', 'Glass Aluminium', 'Roller door', 'Security door', 'Window', 'Cupboard / Drawer', 'Other']);
+  populateSel('rf-swing', ['Sliding','Swinging','Other']);
 }
 
 // ── Plan/stamp auto-increment logic ──
@@ -1128,23 +1128,14 @@ function handlePhotosRes(input) {
   let processed = 0;
   const results = new Array(files.length);
   files.forEach((file, i) => {
-    const arrReader = new FileReader();
-    arrReader.onload = (arrEv) => {
-      const orientation = getExifOrientation(arrEv.target.result);
-      const urlReader = new FileReader();
-      urlReader.onload = (urlEv) => {
-        correctOrientation(urlEv.target.result, orientation, (corrected) => {
-          results[i] = corrected;
-          processed++;
-          if (processed === files.length) {
-            results.forEach(r => resCurrentPhotos.push(r));
-            renderResPhotoStrip();
-          }
-        });
-      };
-      urlReader.readAsDataURL(file);
-    };
-    arrReader.readAsArrayBuffer(file);
+    fixPhotoOrientation(file, (corrected) => {
+      results[i] = corrected;
+      processed++;
+      if (processed === files.length) {
+        results.forEach(r => resCurrentPhotos.push(r));
+        renderResPhotoStrip();
+      }
+    });
   });
   input.value = '';
 }
@@ -1326,6 +1317,41 @@ function switchTab(idx) {
 // ── Photos ──
 
 // Read EXIF orientation from raw ArrayBuffer
+// Correct photo orientation using createImageBitmap (honours EXIF automatically on iOS)
+// Falls back to canvas-based EXIF parsing if createImageBitmap is unavailable
+function fixPhotoOrientation(file, callback) {
+  // Try createImageBitmap first — iOS 15+ handles EXIF orientation automatically
+  if ('createImageBitmap' in window) {
+    createImageBitmap(file).then(bitmap => {
+      const canvas = document.createElement('canvas');
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(bitmap, 0, 0);
+      bitmap.close();
+      callback(canvas.toDataURL('image/jpeg', 0.9));
+    }).catch(() => {
+      // Fall back to FileReader if createImageBitmap fails
+      fixPhotoOrientationFallback(file, callback);
+    });
+  } else {
+    fixPhotoOrientationFallback(file, callback);
+  }
+}
+
+function fixPhotoOrientationFallback(file, callback) {
+  const arrReader = new FileReader();
+  arrReader.onload = (arrEv) => {
+    const orientation = getExifOrientation(arrEv.target.result);
+    const urlReader = new FileReader();
+    urlReader.onload = (urlEv) => {
+      correctOrientation(urlEv.target.result, orientation, callback);
+    };
+    urlReader.readAsDataURL(file);
+  };
+  arrReader.readAsArrayBuffer(file);
+}
+
 function getExifOrientation(buffer) {
   const view = new DataView(buffer);
   if (view.getUint16(0, false) !== 0xFFD8) return 1;
@@ -1350,7 +1376,6 @@ function getExifOrientation(buffer) {
   return 1;
 }
 
-// Draw image onto canvas with correct orientation, return corrected dataURL
 function correctOrientation(src, orientation, callback) {
   const img = new Image();
   img.onload = () => {
@@ -1371,7 +1396,7 @@ function correctOrientation(src, orientation, callback) {
       default: break;
     }
     ctx.drawImage(img, 0, 0);
-    callback(canvas.toDataURL('image/jpeg', 0.85));
+    callback(canvas.toDataURL('image/jpeg', 0.9));
   };
   img.src = src;
 }
@@ -1380,29 +1405,18 @@ function handlePhotos(input) {
   const files = Array.from(input.files);
   let processed = 0;
   const results = new Array(files.length);
-
   files.forEach((file, i) => {
-    // Read as ArrayBuffer first to get EXIF orientation
-    const arrReader = new FileReader();
-    arrReader.onload = (arrEv) => {
-      const orientation = getExifOrientation(arrEv.target.result);
-      // Then read as dataURL for the image
-      const urlReader = new FileReader();
-      urlReader.onload = (urlEv) => {
-        correctOrientation(urlEv.target.result, orientation, (corrected) => {
-          results[i] = corrected;
-          processed++;
-          if (processed === files.length) {
-            results.forEach(r => currentPhotos.push(r));
-            renderPhotoStrip();
-          }
-        });
-      };
-      urlReader.readAsDataURL(file);
-    };
-    arrReader.readAsArrayBuffer(file);
+    fixPhotoOrientation(file, (corrected) => {
+      results[i] = corrected;
+      processed++;
+      if (processed === files.length) {
+        results.forEach(r => currentPhotos.push(r));
+        renderPhotoStrip();
+      }
+    });
   });
   input.value = '';
+}
 }
 
 function renderPhotoStrip() {
