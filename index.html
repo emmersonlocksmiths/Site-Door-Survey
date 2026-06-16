@@ -320,6 +320,95 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
+  /* ── Summary detail cards ── */
+  .summary-detail-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .summary-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    background: var(--brand-light);
+    border-bottom: 0.5px solid rgba(26,58,92,0.1);
+    cursor: pointer;
+  }
+  .summary-detail-header .sdh-num {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--brand); color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .summary-detail-header .sdh-title {
+    font-size: 14px; font-weight: 600; color: var(--brand); flex: 1;
+  }
+  .summary-detail-header .sdh-edit {
+    font-size: 12px; color: var(--brand-mid);
+    display: flex; align-items: center; gap: 3px;
+  }
+  .summary-detail-body { padding: 12px 14px; }
+  .summary-field {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .summary-field:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .summary-field-label {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); margin-bottom: 3px;
+  }
+  .summary-field-value {
+    font-size: 13px; color: var(--text); line-height: 1.4;
+  }
+  .summary-field-value.empty { color: var(--text-muted); font-style: italic; }
+  .outcome-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+  .outcome-tag {
+    font-size: 12px; padding: 3px 9px;
+    background: var(--brand-light); color: var(--brand);
+    border-radius: 20px; font-weight: 500;
+  }
+  .summary-photos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .summary-photo-thumb {
+    width: 56px; height: 56px; object-fit: cover;
+    border-radius: 7px; border: 0.5px solid var(--border);
+  }
+
+  /* ── Checkbox list ── */
+  .checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .checkbox-item:last-child { border-bottom: none; }
+  .checkbox-item:active { background: var(--brand-light); }
+  .checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--brand);
+    cursor: pointer;
+  }
+
   /* ── Job type selector ── */
   .job-type-btn {
     padding: 14px 10px;
@@ -667,14 +756,15 @@
         <label for="rf-name">Door name / location</label>
         <select id="rf-name">
           <option value="">— Select —</option>
-          <option>Front door</option>
-          <option>Back door</option>
-          <option>Laundry door</option>
-          <option>Living room door</option>
-          <option>Garage external door</option>
-          <option>Garage internal door</option>
-          <option>External gate</option>
-          <option>Roller door</option>
+          <option>Front</option>
+          <option>Back</option>
+          <option>Laundry</option>
+          <option>Living room</option>
+          <option>Kitchen</option>
+          <option>Bedroom</option>
+          <option>Garage</option>
+          <option>Outside gate</option>
+          <option>Upstairs</option>
         </select>
       </div>
 
@@ -690,16 +780,17 @@
         </div>
       </div>
 
-      <div class="section-label"><i class="ti ti-tool"></i>Hardware</div>
-      <div class="two-col">
-        <div class="field">
-          <label>Type</label>
-          <select id="rf-hardware"></select>
-        </div>
-        <div class="field">
-          <label>Colour</label>
-          <select id="rf-colour"></select>
-        </div>
+      <div class="section-label"><i class="ti ti-target"></i>Desired outcome</div>
+      <div class="checkbox-list" id="rf-outcome-list">
+        <label class="checkbox-item"><input type="checkbox" value="Lock change with new keys" /> Lock change with new keys</label>
+        <label class="checkbox-item"><input type="checkbox" value="New lock install" /> New lock install</label>
+        <label class="checkbox-item"><input type="checkbox" value="Keys made to existing lock" /> Keys made to existing lock</label>
+        <label class="checkbox-item"><input type="checkbox" value="Rekey, key alike" /> Rekey, key alike</label>
+        <label class="checkbox-item"><input type="checkbox" value="Worn, replace with new lock" /> Worn, replace with new lock</label>
+        <label class="checkbox-item"><input type="checkbox" value="Replace with different kind of lock" /> Replace with different kind of lock</label>
+        <label class="checkbox-item"><input type="checkbox" value="Add extra security" /> Add extra security</label>
+        <label class="checkbox-item"><input type="checkbox" value="Lock service and repair" /> Lock service and repair</label>
+        <label class="checkbox-item"><input type="checkbox" value="Lock and key removal, handle only" /> Lock and key removal, handle only</label>
       </div>
 
       <div class="section-label"><i class="ti ti-note"></i>Notes</div>
@@ -819,10 +910,8 @@ function initSelects() {
   populateSel('f-colour', COLOURS);
   populateSel('f-cylinder', CYLINDERS);
   // Residential selects
-  populateSel('rf-type', DOOR_TYPES);
-  populateSel('rf-swing', SWING);
-  populateSel('rf-hardware', HARDWARE);
-  populateSel('rf-colour', COLOURS);
+  populateSel('rf-type', ['Timber', 'Glass Aluminium', 'Roller door', 'Security door', 'Window', 'Other']);
+  populateSel('rf-swing', ['Sliding','Swinging']);
 }
 
 // ── Plan/stamp auto-increment logic ──
@@ -918,7 +1007,7 @@ function goToSummary() {
 
 // ── Residential door functions ──
 function freshResDoor(num) {
-  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', type: '', swing: '', hardware: '', colour: '', notes: '' };
+  return { id: Date.now() + Math.random(), doorNo: String(num), name: '', type: '', swing: '', outcome: [], notes: '' };
 }
 
 function loadResDoor(idx) {
@@ -928,8 +1017,11 @@ function loadResDoor(idx) {
   document.getElementById('rf-doorNo').value = d.doorNo;
   document.getElementById('rf-type').value = d.type;
   document.getElementById('rf-swing').value = d.swing;
-  document.getElementById('rf-hardware').value = d.hardware;
-  document.getElementById('rf-colour').value = d.colour;
+  // Restore checkboxes
+  const outcome = d.outcome || [];
+  document.querySelectorAll('#rf-outcome-list input[type="checkbox"]').forEach(cb => {
+    cb.checked = outcome.includes(cb.value);
+  });
   document.getElementById('rf-notes').value = d.notes;
   const label = d.name || ('Door ' + d.doorNo);
   document.getElementById('res-form-door-title').textContent = label;
@@ -939,14 +1031,14 @@ function loadResDoor(idx) {
 }
 
 function readResForm() {
+  const checked = Array.from(document.querySelectorAll('#rf-outcome-list input[type="checkbox"]:checked')).map(cb => cb.value);
   return {
-    name:     document.getElementById('rf-name').value.trim(),
-    doorNo:   document.getElementById('rf-doorNo').value.trim(),
-    type:     document.getElementById('rf-type').value,
-    swing:    document.getElementById('rf-swing').value,
-    hardware: document.getElementById('rf-hardware').value,
-    colour:   document.getElementById('rf-colour').value,
-    notes:    document.getElementById('rf-notes').value.trim(),
+    name:    document.getElementById('rf-name').value,
+    doorNo:  document.getElementById('rf-doorNo').value.trim(),
+    type:    document.getElementById('rf-type').value,
+    swing:   document.getElementById('rf-swing').value,
+    outcome: checked,
+    notes:   document.getElementById('rf-notes').value.trim(),
   };
 }
 
@@ -1337,23 +1429,84 @@ function renderSummary() {
   document.getElementById('summary-count-text').textContent =
     `${activeDoors.length} door${activeDoors.length===1?'':'s'} · ${complete} complete · ${jobType}`;
 
-  // Update back button to go to right survey
-  document.querySelector('#page-summary .back-btn').setAttribute('onclick',
-    jobType === 'residential' ? 'goToSurvey()' : 'goToSurvey()');
-
   document.getElementById('summary-list').innerHTML = activeDoors.map((d,i) => {
-    const photos = (activePhotoData[d.id]||[]).length;
+    const photos = activePhotoData[d.id] || [];
     const label = d.name || ('Door ' + d.doorNo);
-    const sub = jobType === 'residential'
-      ? [d.type, d.swing].filter(Boolean).join(' · ') || 'No details'
-      : [d.planNo ? 'Plan: '+d.planNo : '', d.type, d.cylinder].filter(Boolean).join(' · ') || 'No details';
-    return `<div class="summary-item" onclick="jumpToDoor(${i})">
-      <div class="summary-num">${d.doorNo}</div>
-      <div class="summary-text">
-        <div class="summary-title">${label}</div>
-        <div class="summary-sub">${sub}${photos?' · '+photos+' photo'+(photos===1?'':'s'):''}</div>
+
+    let fieldsHTML = '';
+
+    if (jobType === 'residential') {
+      const outcome = Array.isArray(d.outcome) && d.outcome.length
+        ? `<div class="outcome-tags">${d.outcome.map(o=>`<span class="outcome-tag">${o}</span>`).join('')}</div>`
+        : '<span class="empty">Not selected</span>';
+
+      fieldsHTML = `
+        <div class="summary-field">
+          <div class="summary-field-label">Door type</div>
+          <div class="summary-field-value${!d.type?' empty':''}">${d.type||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Swing</div>
+          <div class="summary-field-value${!d.swing?' empty':''}">${d.swing||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Desired outcome</div>
+          <div class="summary-field-value">${outcome}</div>
+        </div>
+        ${d.notes ? `<div class="summary-field">
+          <div class="summary-field-label">Notes</div>
+          <div class="summary-field-value">${d.notes}</div>
+        </div>` : ''}
+        ${photos.length ? `<div class="summary-field">
+          <div class="summary-field-label">Photos (${photos.length})</div>
+          <div class="summary-photos">${photos.map((src,pi)=>`<img src="${src}" class="summary-photo-thumb" alt="Photo ${pi+1}" />`).join('')}</div>
+        </div>` : ''}
+      `;
+    } else {
+      fieldsHTML = `
+        ${d.planNo ? `<div class="summary-field">
+          <div class="summary-field-label">Plan / stamp no.</div>
+          <div class="summary-field-value">${d.planNo}</div>
+        </div>` : ''}
+        <div class="summary-field">
+          <div class="summary-field-label">Door type</div>
+          <div class="summary-field-value${!d.type?' empty':''}">${d.type||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Swing</div>
+          <div class="summary-field-value${!d.swing?' empty':''}">${d.swing||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Hardware</div>
+          <div class="summary-field-value${!d.hardware?' empty':''}">${d.hardware||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Hardware colour</div>
+          <div class="summary-field-value${!d.colour?' empty':''}">${d.colour||'Not recorded'}</div>
+        </div>
+        <div class="summary-field">
+          <div class="summary-field-label">Cylinder</div>
+          <div class="summary-field-value${!d.cylinder?' empty':''}">${d.cylinder||'Not recorded'}</div>
+        </div>
+        ${d.notes ? `<div class="summary-field">
+          <div class="summary-field-label">Notes</div>
+          <div class="summary-field-value">${d.notes}</div>
+        </div>` : ''}
+        ${photos.length ? `<div class="summary-field">
+          <div class="summary-field-label">Photos (${photos.length})</div>
+          <div class="summary-photos">${photos.map((src,pi)=>`<img src="${src}" class="summary-photo-thumb" alt="Photo ${pi+1}" />`).join('')}</div>
+        </div>` : ''}
+      `;
+    }
+
+    return `
+    <div class="summary-detail-card">
+      <div class="summary-detail-header" onclick="jumpToDoor(${i})">
+        <div class="sdh-num">${d.doorNo}</div>
+        <div class="sdh-title">${label}</div>
+        <div class="sdh-edit"><i class="ti ti-edit" style="font-size:14px;"></i> Edit</div>
       </div>
-      <i class="ti ti-chevron-right summary-arrow"></i>
+      <div class="summary-detail-body">${fieldsHTML}</div>
     </div>`;
   }).join('');
 }
@@ -1453,7 +1606,7 @@ function exportPDF() {
     const fields = jobType === 'residential'
       ? [
           ['Door type', d.type], ['Swing', d.swing],
-          ['Hardware', d.hardware], ['Colour', d.colour],
+          ['Desired outcome', Array.isArray(d.outcome) && d.outcome.length ? d.outcome.join(', ') : null],
           ['Notes', d.notes],
         ].filter(([,v])=>v)
       : [
