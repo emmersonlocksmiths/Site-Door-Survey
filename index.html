@@ -1537,14 +1537,6 @@ function renderSummary() {
           <div class="summary-field-value">${Array.isArray(d.supply) ? d.supply.join(', ') : d.supply}</div>
         </div>` : ''}
         <div class="summary-field">
-          <div class="summary-field-label">Hardware</div>
-          <div class="summary-field-value${!d.hardware?' empty':''}">${d.hardware||'Not recorded'}</div>
-        </div>
-        <div class="summary-field">
-          <div class="summary-field-label">Hardware colour</div>
-          <div class="summary-field-value${!d.colour?' empty':''}">${d.colour||'Not recorded'}</div>
-        </div>
-        <div class="summary-field">
           <div class="summary-field-label">Cylinder</div>
           <div class="summary-field-value${(!d.cylinder||!d.cylinder.length)?' empty':''}">
             ${Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ')+(d.cam?' — '+d.cam:'') : 'Not recorded'}
