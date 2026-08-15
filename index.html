@@ -869,11 +869,41 @@
       <p id="summary-count-text">0 doors recorded</p>
     </div>
     <div class="summary-list" id="summary-list"></div>
-    <button class="next-btn" onclick="exportPDF()">
-      <i class="ti ti-download"></i> Export PDF
+    <button class="next-btn" onclick="submitToCloud()">
+      <i class="ti ti-cloud-upload"></i> Submit to Emmerson Locksmiths
+    </button>
+    <button class="btn btn-export" style="width:100%; justify-content:center; margin-bottom:14px;" onclick="exportPDF()">
+      <i class="ti ti-download"></i> Save a PDF copy for myself
     </button>
   </div>
 </div>
+
+<!-- Submitted confirmation -->
+<div class="page" id="page-submitted">
+  <div class="wrap" style="padding-top:60px; text-align:center;">
+    <div style="width:72px; height:72px; border-radius:50%; background:var(--brand-light); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+      <i class="ti ti-check" style="font-size:36px; color:var(--brand);"></i>
+    </div>
+    <h2 style="font-size:22px; font-weight:600; color:var(--brand); margin-bottom:8px;">Survey submitted</h2>
+    <p style="font-size:14px; color:var(--text-mid); margin-bottom:28px;">Thanks — your door survey has been sent straight through to Emmerson Locksmiths. No need to email or send anything else.</p>
+    <button class="next-btn" onclick="startNewSurvey()">
+      <i class="ti ti-plus"></i> Start a new survey
+    </button>
+  </div>
+</div>
+
+<!-- Submit progress overlay -->
+<div class="modal-overlay" id="submit-overlay">
+  <div class="modal-box" style="text-align:center;">
+    <div style="width:40px; height:40px; border:3px solid var(--brand-light); border-top-color:var(--brand); border-radius:50%; margin:0 auto 16px; animation:spin 0.8s linear infinite;"></div>
+    <div class="modal-title" id="submit-progress-label" style="margin-bottom:14px;">Preparing…</div>
+    <div style="background:var(--surface2); border-radius:20px; height:8px; overflow:hidden;">
+      <div id="submit-progress-bar" style="background:var(--brand); height:100%; width:0%; transition:width 0.2s;"></div>
+    </div>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:10px;">Please keep this page open</div>
+  </div>
+</div>
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
 <!-- Confirm modal -->
 <div class="modal-overlay" id="modal-overlay">
@@ -890,7 +920,22 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 <script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDi8LgVjE7Zr3psTY3C7gzrOP8cpZZUreU",
+  authDomain: "emmerson-door-survey.firebaseapp.com",
+  projectId: "emmerson-door-survey",
+  storageBucket: "emmerson-door-survey.firebasestorage.app",
+  messagingSenderId: "887974323060",
+  appId: "1:887974323060:web:b3578c5dba68345f580221"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 const CYLINDERS = ['570 - Oval Cylinder','201 - Round Cylinder','8221 - PD Cylinder','530 Cylinder','Euro Cylinder Fixed Cam','Euro Cylinder Lazy Cam','Kawneer Cylinder','Other'];
 const DOOR_TYPES = ['Timber','Glass Aluminium','Glass','Auto Door','Fire door','Padlock','Other'];
@@ -1714,6 +1759,129 @@ function exportPDF() {
   const sitePart = (site||client||'survey').replace(/\s+/g,'-').toLowerCase();
   doc.save(`door-survey-${typeLabel.toLowerCase()}-${sitePart}-${new Date().toISOString().slice(0,10)}.pdf`);
   showToast('PDF saved');
+}
+
+// ── Cloud submit ──
+
+// Resize + recompress a photo before upload so mobile uploads stay fast and
+// Storage doesn't fill up with full-resolution camera shots.
+function compressForUpload(dataURL) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxDim = 1600;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.72);
+    };
+    img.src = dataURL;
+  });
+}
+
+function showSubmitOverlay(show) {
+  document.getElementById('submit-overlay').classList.toggle('open', !!show);
+}
+
+function updateSubmitProgress(done, total, label) {
+  const pct = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 100;
+  document.getElementById('submit-progress-label').textContent = label;
+  document.getElementById('submit-progress-bar').style.width = pct + '%';
+}
+
+let isSubmitting = false;
+
+async function submitToCloud() {
+  if (isSubmitting) return;
+
+  if (jobType === 'residential') autoSaveCurrentRes();
+  else autoSaveCurrent();
+
+  const activeDoors = jobType === 'residential' ? resDoors : doors;
+  const activePhotoData = jobType === 'residential' ? resPhotoData : photoData;
+
+  if (activeDoors.length === 0) { showToast('No doors to submit'); return; }
+
+  let client, site, ref, dateVal;
+  if (jobType === 'commercial') {
+    client  = document.getElementById('c-client').value.trim();
+    site    = document.getElementById('c-site').value.trim();
+    ref     = document.getElementById('c-ref').value.trim();
+    dateVal = document.getElementById('c-date').value;
+  } else {
+    client  = document.getElementById('r-client').value.trim();
+    site    = document.getElementById('r-address').value.trim();
+    ref     = '';
+    dateVal = document.getElementById('r-date').value;
+  }
+
+  if (!client && !site) {
+    showToast('Add a client name or site before submitting');
+    return;
+  }
+
+  isSubmitting = true;
+  showSubmitOverlay(true);
+  updateSubmitProgress(0, 0, 'Preparing…');
+
+  try {
+    const totalPhotos = Object.values(activePhotoData).reduce((a, b) => a + b.length, 0);
+    let uploadedCount = 0;
+    updateSubmitProgress(uploadedCount, totalPhotos, totalPhotos ? `Uploading photo 1 of ${totalPhotos}…` : 'Saving job details…');
+
+    const docRef = db.collection('submissions').doc();
+    const submissionId = docRef.id;
+
+    const doorsPayload = [];
+    for (const d of activeDoors) {
+      const photos = activePhotoData[d.id] || [];
+      const photoURLs = [];
+      for (let i = 0; i < photos.length; i++) {
+        const blob = await compressForUpload(photos[i]);
+        const path = `submissions/${submissionId}/door-${d.doorNo}-${i + 1}.jpg`;
+        const storageRef = storage.ref(path);
+        await storageRef.put(blob, { contentType: 'image/jpeg' });
+        const url = await storageRef.getDownloadURL();
+        photoURLs.push(url);
+        uploadedCount++;
+        updateSubmitProgress(uploadedCount, totalPhotos, `Uploading photo ${uploadedCount} of ${totalPhotos}…`);
+      }
+      const { id, ...rest } = d;
+      doorsPayload.push({ ...rest, photoURLs });
+    }
+
+    updateSubmitProgress(totalPhotos, totalPhotos, 'Finalising…');
+
+    await docRef.set({
+      jobType,
+      client,
+      site,
+      ref,
+      date: dateVal || null,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      doorCount: activeDoors.length,
+      photoCount: totalPhotos,
+      doors: doorsPayload,
+    });
+
+    showSubmitOverlay(false);
+    isSubmitting = false;
+    showPage('page-submitted');
+  } catch (err) {
+    console.error(err);
+    showSubmitOverlay(false);
+    isSubmitting = false;
+    showToast('Submit failed — check your connection and try again');
+  }
+}
+
+function startNewSurvey() {
+  location.reload();
 }
 
 function showToast(msg) {
