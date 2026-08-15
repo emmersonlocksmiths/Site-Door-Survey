@@ -93,9 +93,6 @@
   .door-photos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .door-photos img { width: 64px; height: 64px; object-fit: cover; border-radius: 7px; border: 0.5px solid var(--border); cursor: pointer; }
 
-  .pdf-btn { width: 100%; padding: 14px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
-  .pdf-btn:disabled { opacity: 0.6; }
-
   .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
   .lightbox.open { display: flex; }
   .lightbox img { max-width: 100%; max-height: 100%; border-radius: 8px; }
@@ -154,9 +151,6 @@
   <div class="wrap">
     <div class="detail-header-card" id="detail-header"></div>
     <div id="detail-doors"></div>
-    <button class="pdf-btn" id="pdf-btn" onclick="downloadPDF()">
-      <i class="ti ti-download"></i> Download PDF
-    </button>
   </div>
 </div>
 
@@ -166,7 +160,6 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -357,140 +350,6 @@ function openLightbox(url) {
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
-}
-
-// ── PDF regeneration from cloud data ──
-function imageUrlToDataURL(url) {
-  return fetch(url)
-    .then(r => r.blob())
-    .then(blob => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    }));
-}
-
-async function downloadPDF() {
-  const s = activeSubmission;
-  if (!s) return;
-  const btn = document.getElementById('pdf-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2"></i> Building PDF…';
-
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-    const W = 210, margin = 15, contentW = W - margin * 2;
-    const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
-    const dateStr = fmtDate(s.submittedAt);
-    let y = 0;
-
-    doc.setFillColor(26, 58, 92);
-    doc.rect(0, 0, 210, 30, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16); doc.setFont(undefined, 'bold');
-    doc.text(`Door Survey Report — ${typeLabel}`, margin, 13);
-    doc.setFontSize(9); doc.setFont(undefined, 'normal');
-    doc.text('Emmerson Locksmiths & Security', margin, 21);
-    doc.text(dateStr, W - margin, 13, { align: 'right' });
-    if (s.ref) doc.text('Ref: ' + s.ref, W - margin, 21, { align: 'right' });
-    y = 38;
-
-    if (s.client) {
-      doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
-      doc.text('Client', margin, y);
-      doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
-      doc.text(s.client, margin + 22, y); y += 6;
-    }
-    if (s.site) {
-      doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
-      doc.text('Site', margin, y);
-      doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
-      doc.text(s.site, margin + 22, y); y += 6;
-    }
-    y += 2;
-    doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(120, 120, 120);
-    doc.text(`${s.doorCount || 0} door${s.doorCount === 1 ? '' : 's'} surveyed · ${s.photoCount || 0} photo${s.photoCount === 1 ? '' : 's'}`, margin, y);
-    y += 6;
-    doc.setDrawColor(200, 210, 220); doc.setLineWidth(0.4);
-    doc.line(margin, y, W - margin, y); y += 7;
-
-    const doors = s.doors || [];
-    for (let idx = 0; idx < doors.length; idx++) {
-      const d = doors[idx];
-      if (y + 40 > 275) { doc.addPage(); y = margin; }
-
-      const doorLabel = d.name ? `Door ${d.doorNo} — ${d.name}` : `Door ${d.doorNo}`;
-      doc.setFillColor(232, 240, 248);
-      doc.rect(margin, y - 4, contentW, 8, 'F');
-      doc.setTextColor(26, 58, 92); doc.setFontSize(11); doc.setFont(undefined, 'bold');
-      const planPart = (s.jobType === 'commercial' && d.planNo) ? '  ·  Plan: ' + d.planNo : '';
-      doc.text(doorLabel + planPart, margin + 3, y + 1);
-      y += 8;
-
-      const fields = s.jobType === 'residential'
-        ? [['Door type', d.type], ['Swing', d.swing],
-           ['Desired outcome', Array.isArray(d.outcome) && d.outcome.length ? d.outcome.join(', ') : null],
-           ['Notes', d.notes]].filter(([, v]) => v)
-        : [['Door type', d.type],
-           ['What to supply and install', Array.isArray(d.supply) && d.supply.length ? d.supply.join(', ') : null],
-           ['Area', d.area], ['Hardware', d.hardware], ['Colour', d.colour],
-           ['Cylinder', Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ') : null],
-           ['Cam', d.cam], ['Notes', d.notes]].filter(([, v]) => v);
-
-      doc.setFontSize(9);
-      fields.forEach(([label, val]) => {
-        if (y > 275) { doc.addPage(); y = margin; }
-        doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
-        doc.text(label + ':', margin + 3, y);
-        doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
-        const lines = doc.splitTextToSize(String(val), contentW - 50);
-        doc.text(lines, margin + 45, y);
-        y += lines.length * 5;
-      });
-
-      if (fields.length === 0) {
-        doc.setFont(undefined, 'italic'); doc.setTextColor(160, 160, 160);
-        doc.text('No details recorded', margin + 3, y); y += 5;
-      }
-
-      const photoUrls = d._resolvedUrls || (d.photoPaths ? await Promise.all(d.photoPaths.map(p => storage.ref(p).getDownloadURL())) : (d.photoURLs || []));
-      if (photoUrls.length > 0) {
-        y += 3;
-        if (y + 36 > 275) { doc.addPage(); y = margin; }
-        let px = margin + 3;
-        for (const url of photoUrls) {
-          let dataURL;
-          try { dataURL = await imageUrlToDataURL(url); } catch (e) { continue; }
-          if (px + 36 > W - margin) { y += 38; px = margin + 3; }
-          if (y + 36 > 275) { doc.addPage(); y = margin; }
-          try { doc.addImage(dataURL, 'JPEG', px, y, 32, 32); } catch (e) {}
-          px += 35;
-        }
-        y += 36;
-      }
-
-      y += 6;
-      if (idx < doors.length - 1) {
-        doc.setDrawColor(220, 225, 230); doc.setLineWidth(0.3);
-        doc.line(margin, y, W - margin, y); y += 5;
-      }
-    }
-
-    doc.setFontSize(8); doc.setTextColor(160); doc.setFont(undefined, 'normal');
-    doc.text('Generated by Emmerson Locksmiths & Security — emmersonlocksmiths.com.au', margin, 290);
-
-    const sitePart = (s.site || s.client || 'survey').replace(/\s+/g, '-').toLowerCase();
-    doc.save(`door-survey-${(s.jobType || 'job')}-${sitePart}-${new Date().toISOString().slice(0, 10)}.pdf`);
-    showToast('PDF saved');
-  } catch (err) {
-    console.error(err);
-    showToast('Could not build PDF');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-download"></i> Download PDF';
-  }
 }
 </script>
 </body>
