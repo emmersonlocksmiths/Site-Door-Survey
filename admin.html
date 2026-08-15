@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Survey Submissions — Emmerson Locksmiths</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand: #1a3a5c;
+    --brand-light: #e8f0f8;
+    --brand-mid: #2e5f93;
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --surface2: #f0f0ee;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.22);
+    --text: #1a1a18;
+    --text-mid: #555550;
+    --text-muted: #888880;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --danger: #b53c2a;
+    --success: #2a7a4a;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 15px; line-height: 1.5; min-height: 100vh;
+  }
+  .app-header {
+    background: var(--brand); color: #fff;
+    padding: 14px 16px 12px; position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between; min-height: 58px;
+  }
+  .app-header h1 { font-size: 17px; font-weight: 600; }
+  .app-header .sub { font-size: 12px; opacity: 0.7; margin-top: 1px; }
+  .header-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .back-btn { background: none; border: none; color: #fff; font-size: 14px; font-family: inherit; display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 4px 0; opacity: 0.9; }
+  .back-btn i { font-size: 18px; }
+  .signout-btn { background: none; border: none; color: #fff; opacity: 0.8; font-size: 13px; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 14px 40px; }
+
+  /* Login */
+  .login-wrap { max-width: 360px; margin: 0 auto; padding: 80px 20px 0; text-align: center; }
+  .login-wrap .lock-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 28px; color: var(--brand); }
+  .login-wrap h2 { font-size: 20px; font-weight: 600; color: var(--brand); margin-bottom: 4px; }
+  .login-wrap p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+  .field { margin-bottom: 12px; text-align: left; }
+  .field label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; font-weight: 500; }
+  .field input { width: 100%; font-size: 15px; font-family: inherit; padding: 11px 12px; border: 0.5px solid var(--border-strong); border-radius: var(--radius); background: var(--surface2); color: var(--text); }
+  .field input:focus { outline: 2px solid var(--brand-mid); outline-offset: 1px; border-color: var(--brand-mid); background: var(--surface); }
+  .primary-btn { width: 100%; padding: 14px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; margin-top: 6px; }
+  .primary-btn:active { opacity: 0.85; }
+  .login-error { color: var(--danger); font-size: 13px; margin-top: 12px; display: none; }
+
+  /* Dashboard */
+  .page-intro { margin-bottom: 16px; }
+  .page-intro h2 { font-size: 20px; font-weight: 600; color: var(--brand); margin-bottom: 3px; }
+  .page-intro p { font-size: 13px; color: var(--text-muted); }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+
+  .sub-card {
+    background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+    padding: 14px; margin-bottom: 10px; cursor: pointer; display: flex; gap: 12px; align-items: center;
+  }
+  .sub-card:active { background: var(--surface2); }
+  .sub-badge { width: 40px; height: 40px; border-radius: 10px; background: var(--brand-light); color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .sub-info { flex: 1; min-width: 0; }
+  .sub-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .type-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--brand-light); color: var(--brand); text-transform: uppercase; letter-spacing: 0.03em; }
+  .sub-arrow { color: var(--text-muted); font-size: 18px; }
+
+  /* Detail */
+  .detail-header-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
+  .detail-header-card h2 { font-size: 18px; font-weight: 600; color: var(--brand); margin-bottom: 4px; }
+  .detail-header-card .meta-row { font-size: 13px; color: var(--text-mid); margin-top: 6px; }
+  .detail-header-card .meta-row span { color: var(--text-muted); }
+
+  .door-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 10px; }
+  .door-card-header { padding: 11px 14px; background: var(--brand-light); font-size: 14px; font-weight: 600; color: var(--brand); display: flex; align-items: center; gap: 10px; }
+  .door-num { width: 26px; height: 26px; border-radius: 7px; background: var(--brand); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .door-card-body { padding: 12px 14px; }
+  .df { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
+  .df:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .df-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 3px; }
+  .df-val { font-size: 13px; color: var(--text); }
+  .door-photos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .door-photos img { width: 64px; height: 64px; object-fit: cover; border-radius: 7px; border: 0.5px solid var(--border); cursor: pointer; }
+
+  .pdf-btn { width: 100%; padding: 14px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+  .pdf-btn:disabled { opacity: 0.6; }
+
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 18px; border-radius: 20px; transition: transform 0.3s ease; z-index: 500; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="page active" id="page-login">
+  <div class="login-wrap">
+    <div class="lock-icon"><i class="ti ti-lock"></i></div>
+    <h2>Survey Submissions</h2>
+    <p>Sign in to view door surveys submitted by customers.</p>
+    <div class="field">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" autocomplete="current-password" />
+    </div>
+    <button class="primary-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-error" id="login-error">Incorrect email or password.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <header class="app-header">
+    <div>
+      <h1>Survey Submissions</h1>
+      <div class="sub">Emmerson Locksmiths &amp; Security</div>
+    </div>
+    <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i> Sign out</button>
+  </header>
+  <div class="wrap">
+    <div class="page-intro">
+      <h2>Recent surveys</h2>
+      <p id="dash-count-text">Loading…</p>
+    </div>
+    <div id="sub-list"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="page" id="page-detail">
+  <header class="app-header">
+    <button class="back-btn" onclick="showPage('page-dashboard')">
+      <i class="ti ti-arrow-left"></i> Back
+    </button>
+    <div class="header-icon"><i class="ti ti-door"></i></div>
+  </header>
+  <div class="wrap">
+    <div class="detail-header-card" id="detail-header"></div>
+    <div id="detail-doors"></div>
+    <button class="pdf-btn" id="pdf-btn" onclick="downloadPDF()">
+      <i class="ti ti-download"></i> Download PDF
+    </button>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBK6pUCdL0a6Tb5FwDqnZZCwJ0J-YC1EQc",
+  authDomain: "emmerson-s-door-site-survey.firebaseapp.com",
+  projectId: "emmerson-s-door-site-survey",
+  storageBucket: "emmerson-s-door-site-survey.firebasestorage.app",
+  messagingSenderId: "659606435757",
+  appId: "1:659606435757:web:39f49b0c0daa8034c6d324"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+let submissions = [];
+let activeSubmission = null;
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  document.getElementById('login-error').style.display = 'none';
+  auth.signInWithEmailAndPassword(email, password).catch(() => {
+    document.getElementById('login-error').style.display = 'block';
+  });
+}
+
+function doSignOut() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    showPage('page-dashboard');
+    loadSubmissions();
+  } else {
+    showPage('page-login');
+  }
+});
+
+function loadSubmissions() {
+  document.getElementById('dash-count-text').textContent = 'Loading…';
+  db.collection('submissions').orderBy('submittedAt', 'desc').limit(100).get()
+    .then((snap) => {
+      submissions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderSubList();
+    })
+    .catch((err) => {
+      console.error(err);
+      document.getElementById('dash-count-text').textContent = 'Could not load submissions.';
+    });
+}
+
+function fmtDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }) +
+         ' · ' + d.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderSubList() {
+  const list = document.getElementById('sub-list');
+  document.getElementById('dash-count-text').textContent =
+    submissions.length + ' survey' + (submissions.length === 1 ? '' : 's') + ' received';
+
+  if (submissions.length === 0) {
+    list.innerHTML = '<div class="empty-state">No surveys submitted yet.<br>Once a customer submits from the survey app, it\'ll show up here.</div>';
+    return;
+  }
+
+  list.innerHTML = submissions.map((s, i) => {
+    const title = [s.client, s.site].filter(Boolean).join(' — ') || 'Unnamed job';
+    const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
+    return `<div class="sub-card" onclick="openSubmission(${i})">
+      <div class="sub-badge"><i class="ti ti-${s.jobType === 'residential' ? 'home' : 'building'}"></i></div>
+      <div class="sub-info">
+        <div class="sub-title">${escapeHTML(title)}</div>
+        <div class="sub-meta">
+          <span class="type-tag">${typeLabel}</span>
+          <span>${s.doorCount || 0} door${s.doorCount === 1 ? '' : 's'}</span>
+          <span>${s.photoCount || 0} photo${s.photoCount === 1 ? '' : 's'}</span>
+        </div>
+        <div class="sub-meta">${fmtDate(s.submittedAt)}</div>
+      </div>
+      <div class="sub-arrow"><i class="ti ti-chevron-right"></i></div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHTML(str) {
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+async function openSubmission(idx) {
+  activeSubmission = submissions[idx];
+  const s = activeSubmission;
+  const title = [s.client, s.site].filter(Boolean).join(' — ') || 'Unnamed job';
+  const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
+
+  document.getElementById('detail-header').innerHTML = `
+    <h2>${escapeHTML(title)}</h2>
+    <div class="meta-row"><span>Type:</span> ${typeLabel}</div>
+    ${s.ref ? `<div class="meta-row"><span>Reference:</span> ${escapeHTML(s.ref)}</div>` : ''}
+    <div class="meta-row"><span>Submitted:</span> ${fmtDate(s.submittedAt)}</div>
+    <div class="meta-row"><span>${s.doorCount || 0} door${s.doorCount === 1 ? '' : 's'} · ${s.photoCount || 0} photo${s.photoCount === 1 ? '' : 's'}</span></div>
+  `;
+
+  const doors = s.doors || [];
+  document.getElementById('detail-doors').innerHTML = doors.map((d, i) =>
+    `<div class="door-card" id="door-card-${i}">${renderDoorCardShell(s, d)}</div>`
+  ).join('');
+  showPage('page-detail');
+
+  // Resolve each door's photo paths to viewable URLs now that we're signed in
+  for (let i = 0; i < doors.length; i++) {
+    const d = doors[i];
+    const paths = d.photoPaths || d.photoURLs || []; // photoURLs kept for backward compatibility with old submissions
+    if (!paths.length) continue;
+    try {
+      const urls = await Promise.all(paths.map(p =>
+        p.startsWith('http') ? p : storage.ref(p).getDownloadURL()
+      ));
+      d._resolvedUrls = urls;
+      const card = document.getElementById(`door-card-${i}`);
+      if (card) card.innerHTML = renderDoorCardShell(s, d, urls);
+    } catch (e) {
+      console.error('Failed to load photos for door', d.doorNo, e);
+    }
+  }
+}
+
+function renderDoorCardShell(s, d, urls) {
+  const label = d.name || ('Door ' + d.doorNo);
+  const fields = s.jobType === 'residential'
+    ? [['Door type', d.type], ['Swing', d.swing],
+       ['Desired outcome', Array.isArray(d.outcome) && d.outcome.length ? d.outcome.join(', ') : null],
+       ['Notes', d.notes]]
+    : [['Plan / stamp no.', d.planNo], ['Area', d.area], ['Door type', d.type],
+       ['What to supply and install', Array.isArray(d.supply) && d.supply.length ? d.supply.join(', ') : null],
+       ['Cylinder', Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ') + (d.cam ? ' — ' + d.cam : '') : null],
+       ['Notes', d.notes]];
+
+  const fieldsHTML = fields.filter(([, v]) => v).map(([label, val]) =>
+    `<div class="df"><div class="df-label">${label}</div><div class="df-val">${escapeHTML(val)}</div></div>`
+  ).join('');
+
+  const photoCount = (d.photoPaths || d.photoURLs || []).length;
+  let photosHTML = '';
+  if (photoCount && urls) {
+    photosHTML = `<div class="df">
+        <div class="df-label">Photos (${photoCount})</div>
+        <div class="door-photos">${urls.map(url => `<img src="${url}" onclick="event.stopPropagation();openLightbox('${url}')" loading="lazy" />`).join('')}</div>
+      </div>`;
+  } else if (photoCount) {
+    photosHTML = `<div class="df">
+        <div class="df-label">Photos (${photoCount})</div>
+        <div class="door-photos" style="font-size:12px;color:var(--text-muted);">Loading…</div>
+      </div>`;
+  }
+
+  return `
+    <div class="door-card-header"><div class="door-num">${d.doorNo}</div>${escapeHTML(label)}</div>
+    <div class="door-card-body">${fieldsHTML || '<div class="df-val" style="color:var(--text-muted);font-style:italic;">No details recorded</div>'}${photosHTML}</div>
+  `;
+}
+
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ── PDF regeneration from cloud data ──
+function imageUrlToDataURL(url) {
+  return fetch(url)
+    .then(r => r.blob())
+    .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    }));
+}
+
+async function downloadPDF() {
+  const s = activeSubmission;
+  if (!s) return;
+  const btn = document.getElementById('pdf-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2"></i> Building PDF…';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const W = 210, margin = 15, contentW = W - margin * 2;
+    const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
+    const dateStr = fmtDate(s.submittedAt);
+    let y = 0;
+
+    doc.setFillColor(26, 58, 92);
+    doc.rect(0, 0, 210, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16); doc.setFont(undefined, 'bold');
+    doc.text(`Door Survey Report — ${typeLabel}`, margin, 13);
+    doc.setFontSize(9); doc.setFont(undefined, 'normal');
+    doc.text('Emmerson Locksmiths & Security', margin, 21);
+    doc.text(dateStr, W - margin, 13, { align: 'right' });
+    if (s.ref) doc.text('Ref: ' + s.ref, W - margin, 21, { align: 'right' });
+    y = 38;
+
+    if (s.client) {
+      doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
+      doc.text('Client', margin, y);
+      doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
+      doc.text(s.client, margin + 22, y); y += 6;
+    }
+    if (s.site) {
+      doc.setTextColor(80, 80, 80); doc.setFontSize(9); doc.setFont(undefined, 'bold');
+      doc.text('Site', margin, y);
+      doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20); doc.setFontSize(11);
+      doc.text(s.site, margin + 22, y); y += 6;
+    }
+    y += 2;
+    doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(120, 120, 120);
+    doc.text(`${s.doorCount || 0} door${s.doorCount === 1 ? '' : 's'} surveyed · ${s.photoCount || 0} photo${s.photoCount === 1 ? '' : 's'}`, margin, y);
+    y += 6;
+    doc.setDrawColor(200, 210, 220); doc.setLineWidth(0.4);
+    doc.line(margin, y, W - margin, y); y += 7;
+
+    const doors = s.doors || [];
+    for (let idx = 0; idx < doors.length; idx++) {
+      const d = doors[idx];
+      if (y + 40 > 275) { doc.addPage(); y = margin; }
+
+      const doorLabel = d.name ? `Door ${d.doorNo} — ${d.name}` : `Door ${d.doorNo}`;
+      doc.setFillColor(232, 240, 248);
+      doc.rect(margin, y - 4, contentW, 8, 'F');
+      doc.setTextColor(26, 58, 92); doc.setFontSize(11); doc.setFont(undefined, 'bold');
+      const planPart = (s.jobType === 'commercial' && d.planNo) ? '  ·  Plan: ' + d.planNo : '';
+      doc.text(doorLabel + planPart, margin + 3, y + 1);
+      y += 8;
+
+      const fields = s.jobType === 'residential'
+        ? [['Door type', d.type], ['Swing', d.swing],
+           ['Desired outcome', Array.isArray(d.outcome) && d.outcome.length ? d.outcome.join(', ') : null],
+           ['Notes', d.notes]].filter(([, v]) => v)
+        : [['Door type', d.type],
+           ['What to supply and install', Array.isArray(d.supply) && d.supply.length ? d.supply.join(', ') : null],
+           ['Area', d.area], ['Hardware', d.hardware], ['Colour', d.colour],
+           ['Cylinder', Array.isArray(d.cylinder) && d.cylinder.length ? d.cylinder.join(', ') : null],
+           ['Cam', d.cam], ['Notes', d.notes]].filter(([, v]) => v);
+
+      doc.setFontSize(9);
+      fields.forEach(([label, val]) => {
+        if (y > 275) { doc.addPage(); y = margin; }
+        doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
+        doc.text(label + ':', margin + 3, y);
+        doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
+        const lines = doc.splitTextToSize(String(val), contentW - 50);
+        doc.text(lines, margin + 45, y);
+        y += lines.length * 5;
+      });
+
+      if (fields.length === 0) {
+        doc.setFont(undefined, 'italic'); doc.setTextColor(160, 160, 160);
+        doc.text('No details recorded', margin + 3, y); y += 5;
+      }
+
+      const photoUrls = d._resolvedUrls || (d.photoPaths ? await Promise.all(d.photoPaths.map(p => storage.ref(p).getDownloadURL())) : (d.photoURLs || []));
+      if (photoUrls.length > 0) {
+        y += 3;
+        if (y + 36 > 275) { doc.addPage(); y = margin; }
+        let px = margin + 3;
+        for (const url of photoUrls) {
+          let dataURL;
+          try { dataURL = await imageUrlToDataURL(url); } catch (e) { continue; }
+          if (px + 36 > W - margin) { y += 38; px = margin + 3; }
+          if (y + 36 > 275) { doc.addPage(); y = margin; }
+          try { doc.addImage(dataURL, 'JPEG', px, y, 32, 32); } catch (e) {}
+          px += 35;
+        }
+        y += 36;
+      }
+
+      y += 6;
+      if (idx < doors.length - 1) {
+        doc.setDrawColor(220, 225, 230); doc.setLineWidth(0.3);
+        doc.line(margin, y, W - margin, y); y += 5;
+      }
+    }
+
+    doc.setFontSize(8); doc.setTextColor(160); doc.setFont(undefined, 'normal');
+    doc.text('Generated by Emmerson Locksmiths & Security — emmersonlocksmiths.com.au', margin, 290);
+
+    const sitePart = (s.site || s.client || 'survey').replace(/\s+/g, '-').toLowerCase();
+    doc.save(`door-survey-${(s.jobType || 'job')}-${sitePart}-${new Date().toISOString().slice(0, 10)}.pdf`);
+    showToast('PDF saved');
+  } catch (err) {
+    console.error(err);
+    showToast('Could not build PDF');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-download"></i> Download PDF';
+  }
+}
+</script>
+</body>
+</html>
