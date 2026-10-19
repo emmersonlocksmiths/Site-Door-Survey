@@ -45,8 +45,9 @@
     background: var(--bg); color: var(--text);
     font-size: 15px; line-height: 1.5; min-height: calc(100vh - 55px);
   }
-  .brand-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; justify-content: center; }
-  .brand-bar img { display: block; height: 32px; width: auto; max-width: 100%; }
+  .brand-bar { background: var(--brand); border-bottom: 1px solid rgba(255,255,255,0.10); padding: 13px 16px 11px; display: flex; justify-content: center; }
+  .brand-bar img { display: block; height: 30px; width: auto; max-width: 100%; }
+  body:has(#page-login.active) .brand-bar { border-bottom: 3px solid var(--accent); padding-bottom: 9px; }
 
   .app-header {
     background: var(--brand); color: #fff;
@@ -152,7 +153,7 @@
 </head>
 <body>
 
-<div class="brand-bar"><img src="icons/logo.png" alt="Emmerson Locksmiths and Security" width="200" height="32" /></div>
+<div class="brand-bar"><img src="icons/logo-white.png" alt="Emmerson Locksmiths and Security" width="186" height="30" /></div>
 
 <!-- LOGIN -->
 <div class="page active" id="page-login">
