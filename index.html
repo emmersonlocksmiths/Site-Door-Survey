@@ -53,10 +53,13 @@
     color: var(--text);
     font-size: 15px;
     line-height: 1.5;
-    min-height: 100vh;
+    min-height: calc(100vh - 55px);
     padding-bottom: 60px;
     -webkit-font-smoothing: antialiased;
   }
+
+  .brand-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; justify-content: center; }
+  .brand-bar img { display: block; height: 32px; width: auto; max-width: 100%; }
 
   .app-header {
     background: var(--brand);
@@ -581,6 +584,8 @@
 </style>
 </head>
 <body>
+
+<div class="brand-bar"><img src="icons/logo.png" alt="Emmerson Locksmiths and Security" width="200" height="32" /></div>
 
 <!-- PAGE: Landing -->
 <div class="page active" id="page-landing">
@@ -1187,7 +1192,7 @@ function showPage(id, fromPopState) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   if (!fromPopState) {
-    history.pushState({ page: id }, '', '#' + id);
+    history.pushState({ page: id }, '', '#!' + id);
   }
 }
 
@@ -1196,7 +1201,7 @@ window.addEventListener('popstate', (e) => {
   if (document.getElementById(id)) showPage(id, true);
 });
 
-history.replaceState({ page: 'page-landing' }, '', '#page-landing');
+history.replaceState({ page: 'page-landing' }, '', '#!page-landing');
 
 // ── Required-field validation for customer contact details ──
 function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }

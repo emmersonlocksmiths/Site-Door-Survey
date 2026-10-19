@@ -43,8 +43,11 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     background: var(--bg); color: var(--text);
-    font-size: 15px; line-height: 1.5; min-height: 100vh;
+    font-size: 15px; line-height: 1.5; min-height: calc(100vh - 55px);
   }
+  .brand-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; justify-content: center; }
+  .brand-bar img { display: block; height: 32px; width: auto; max-width: 100%; }
+
   .app-header {
     background: var(--brand); color: #fff;
     padding: 14px 16px 12px; position: sticky; top: 0; z-index: 100;
@@ -148,6 +151,8 @@
 </style>
 </head>
 <body>
+
+<div class="brand-bar"><img src="icons/logo.png" alt="Emmerson Locksmiths and Security" width="200" height="32" /></div>
 
 <!-- LOGIN -->
 <div class="page active" id="page-login">
