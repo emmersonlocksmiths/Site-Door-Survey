@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Door Survey" />
-<meta name="theme-color" content="#16344f" />
+<meta name="theme-color" content="#12304d" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
@@ -15,21 +15,21 @@
 <title>Door Survey — Emmerson Locksmiths</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --brand: #16344f;
+    --brand: #12304d;
     --brand-mid: #2c5c8f;
-    --brand-dark: #0d2338;
-    --brand-light: #ecf2f7;
-    --accent: #b6893f;
-    --accent-light: #f6efe1;
-    --bg: #f4f4f2;
+    --brand-dark: #0a2239;
+    --brand-light: #e9eef3;
+    --accent: #b8913f;
+    --accent-light: #f1e7d0;
+    --bg: #f6f3ec;
     --surface: #ffffff;
-    --surface2: #eef0f1;
+    --surface2: #efebe2;
     --border: rgba(13,35,56,0.09);
     --border-strong: rgba(13,35,56,0.18);
     --text: #13181d;
@@ -40,7 +40,8 @@
     --radius-lg: 14px;
     --shadow-sm: 0 1px 3px rgba(13,35,56,0.06);
     --shadow-md: 0 6px 18px rgba(13,35,56,0.10);
-    --danger: #ab3d2b;
+    --font-head: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --danger: #ab3d2b;
     --success: #2f7a4f;
   }
 
@@ -71,7 +72,7 @@
     border-bottom: 3px solid var(--accent);
     box-shadow: var(--shadow-md);
   }
-  .app-header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .app-header h1 { font-family: var(--font-head); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
   .app-header .sub { font-size: 11.5px; opacity: 0.72; margin-top: 2px; letter-spacing: 0.01em; }
   .header-icon {
     width: 36px; height: 36px;
@@ -161,7 +162,7 @@
 
   /* Detail page */
   .page-intro { margin-bottom: 20px; }
-  .page-intro h2 { font-family: 'Space Grotesk', sans-serif; font-size: 23px; font-weight: 600; color: var(--brand); letter-spacing: -0.02em; margin-bottom: 4px; }
+  .page-intro h2 { font-family: var(--font-head); font-size: 23px; font-weight: 600; color: var(--brand); letter-spacing: -0.02em; margin-bottom: 4px; }
   .page-intro p { font-size: 14px; color: var(--text-muted); }
 
   .detail-card {
@@ -177,7 +178,7 @@
     width: 100%; padding: 16px;
     background: var(--brand); color: #fff;
     border: none; border-radius: var(--radius-lg);
-    font-size: 16px; font-family: 'Space Grotesk', inherit; font-weight: 600;
+    font-size: 16px; font-family: inherit; font-weight: 600;
     letter-spacing: -0.005em;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -190,7 +191,7 @@
   /* Job summary bar */
   .job-summary-bar {
     background: var(--brand-light);
-    border: 1px solid rgba(22,52,79,0.13);
+    border: 1px solid rgba(18,48,77,0.13);
     border-radius: var(--radius);
     padding: 10px 13px;
     margin-bottom: 14px;
@@ -199,7 +200,7 @@
   .job-summary-bar .job-name { font-size: 13px; font-weight: 600; color: var(--brand); }
   .job-summary-bar .job-ref { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
   .edit-job-btn {
-    background: none; border: 1px solid rgba(22,52,79,0.22);
+    background: none; border: 1px solid rgba(18,48,77,0.22);
     border-radius: 8px; padding: 5px 10px;
     font-size: 12px; color: var(--brand); cursor: pointer;
     font-family: inherit; white-space: nowrap; font-weight: 500;
@@ -256,7 +257,7 @@
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
   }
-  .door-form-heading h2 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 600; color: var(--brand); letter-spacing: -0.01em; }
+  .door-form-heading h2 { font-family: var(--font-head); font-size: 19px; font-weight: 600; color: var(--brand); letter-spacing: -0.01em; }
   .door-counter {
     font-size: 12px;
     background: var(--brand-light);
@@ -267,7 +268,6 @@
   }
 
   .section-label {
-    font-family: 'Space Grotesk', sans-serif;
     font-size: 11px; font-weight: 600;
     letter-spacing: 0.07em; text-transform: uppercase;
     color: var(--text-mid); margin-bottom: 8px; margin-top: 14px;
@@ -280,7 +280,7 @@
     font-size: 16px;
     font-weight: 500;
     background: var(--brand-light);
-    border-color: rgba(22,52,79,0.22);
+    border-color: rgba(18,48,77,0.22);
     color: var(--brand);
   }
   .door-name-field input:focus {
@@ -288,7 +288,7 @@
     color: var(--text);
   }
   .door-name-field input::placeholder {
-    color: rgba(22,52,79,0.4);
+    color: rgba(18,48,77,0.4);
     font-weight: 400;
   }
 
@@ -324,7 +324,7 @@
     width: 100%; padding: 16px;
     background: var(--brand); color: #fff;
     border: none; border-radius: var(--radius-lg);
-    font-size: 16px; font-family: 'Space Grotesk', inherit; font-weight: 600;
+    font-size: 16px; font-family: inherit; font-weight: 600;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 8px;
     box-shadow: var(--shadow-md);
@@ -363,7 +363,6 @@
     font-size: 13px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-family: 'Space Grotesk', sans-serif;
   }
   .summary-text { flex: 1; }
   .summary-title { font-size: 14px; font-weight: 600; }
@@ -397,7 +396,7 @@
     gap: 12px;
     padding: 15px 16px;
     background: var(--brand-light);
-    border-bottom: 1px solid rgba(22,52,79,0.1);
+    border-bottom: 1px solid rgba(18,48,77,0.1);
     cursor: pointer;
   }
   .summary-detail-header .sdh-num {
@@ -406,10 +405,9 @@
     font-size: 14px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-family: 'Space Grotesk', sans-serif;
   }
   .summary-detail-header .sdh-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-head);
     font-size: 16px; font-weight: 600; color: var(--brand); flex: 1;
   }
   .summary-detail-header .sdh-edit {
@@ -436,7 +434,7 @@
   .outcome-tag {
     font-size: 13px; padding: 4px 11px;
     background: var(--accent-light); color: var(--brand);
-    border: 1px solid rgba(182,137,63,0.35);
+    border: 1px solid rgba(184,145,63,0.35);
     border-radius: 20px; font-weight: 600;
   }
   .summary-photos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
@@ -534,7 +532,7 @@
     box-shadow: 0 -8px 30px rgba(13,20,27,0.18);
   }
   .modal-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-head);
     font-size: 17px; font-weight: 600;
     color: var(--text); margin-bottom: 6px;
   }
@@ -594,8 +592,8 @@
     <div class="header-icon"><i class="ti ti-clipboard-list"></i></div>
   </header>
   <div class="wrap" style="display:flex; flex-direction:column; min-height:calc(100vh - 74px); padding-bottom:24px;">
-    <button id="hero-survey-btn" style="width:100%; padding:30px 20px 26px; background:var(--brand); color:#fff; border:none; border-bottom:3px solid var(--accent); border-radius:18px; font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:700; letter-spacing:-0.01em; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; margin-top:32px; box-shadow:var(--shadow-md), 0 10px 30px rgba(13,35,56,0.2); position:relative; overflow:hidden; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;">
-      <span style="width:62px; height:62px; border-radius:50%; background:rgba(255,255,255,0.08); border:1.5px solid rgba(182,137,63,0.6); display:flex; align-items:center; justify-content:center;">
+    <button id="hero-survey-btn" style="width:100%; padding:30px 20px 26px; background:var(--brand); color:#fff; border:none; border-bottom:3px solid var(--accent); border-radius:18px; font-family:var(--font-head); font-size:21px; font-weight:600; letter-spacing:-0.01em; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; margin-top:32px; box-shadow:var(--shadow-md), 0 10px 30px rgba(13,35,56,0.2); position:relative; overflow:hidden; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;">
+      <span style="width:62px; height:62px; border-radius:50%; background:rgba(255,255,255,0.08); border:1.5px solid rgba(184,145,63,0.6); display:flex; align-items:center; justify-content:center;">
         <i class="ti ti-home" style="font-size:30px;"></i>
       </span>
       Start Door Survey
@@ -987,10 +985,10 @@
 <!-- Submitted confirmation -->
 <div class="page" id="page-submitted">
   <div class="wrap" style="padding-top:60px; text-align:center;">
-    <div style="width:72px; height:72px; border-radius:50%; background:var(--brand-light); border:1.5px solid rgba(182,137,63,0.5); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+    <div style="width:72px; height:72px; border-radius:50%; background:var(--brand-light); border:1.5px solid rgba(184,145,63,0.5); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
       <i class="ti ti-check" style="font-size:36px; color:var(--brand);"></i>
     </div>
-    <h2 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:var(--brand); letter-spacing:-0.01em; margin-bottom:8px;">Survey submitted</h2>
+    <h2 style="font-family:var(--font-head); font-size:22px; font-weight:600; color:var(--brand); letter-spacing:-0.01em; margin-bottom:8px;">Survey submitted</h2>
     <p style="font-size:14px; color:var(--text-mid); margin-bottom:28px;">Thanks — your door survey has been sent straight through to Emmerson Locksmiths. No need to do anything else.</p>
     <button class="next-btn" onclick="startNewSurvey()">
       <i class="ti ti-plus"></i> Start a new survey
@@ -1027,7 +1025,7 @@
 <!-- Commercial unlock modal -->
 <div class="modal-overlay" id="commercial-unlock-modal">
   <div class="modal-box" style="text-align:center;">
-    <div style="width:52px; height:52px; border-radius:50%; background:var(--brand-light); border:1.5px solid rgba(182,137,63,0.5); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+    <div style="width:52px; height:52px; border-radius:50%; background:var(--brand-light); border:1.5px solid rgba(184,145,63,0.5); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
       <i class="ti ti-lock" style="font-size:24px; color:var(--brand);"></i>
     </div>
     <div class="modal-title" id="pattern-modal-title">Commercial mode</div>
@@ -2174,11 +2172,11 @@ function drawPatternLines(liveX, liveY) {
   for (let i = 0; i < patternPath.length - 1; i++) {
     const [x1, y1] = patternDotsPos[patternPath[i]];
     const [x2, y2] = patternDotsPos[patternPath[i + 1]];
-    html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#b6893f" stroke-width="4" stroke-linecap="round"/>`;
+    html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#b8913f" stroke-width="4" stroke-linecap="round"/>`;
   }
   if (patternActive && liveX != null && patternPath.length) {
     const [lx, ly] = patternDotsPos[patternPath[patternPath.length - 1]];
-    html += `<line x1="${lx}" y1="${ly}" x2="${liveX - rect.left}" y2="${liveY - rect.top}" stroke="#b6893f" stroke-width="4" stroke-linecap="round" opacity="0.5"/>`;
+    html += `<line x1="${lx}" y1="${ly}" x2="${liveX - rect.left}" y2="${liveY - rect.top}" stroke="#b8913f" stroke-width="4" stroke-linecap="round" opacity="0.5"/>`;
   }
   svg.innerHTML = html;
 }
