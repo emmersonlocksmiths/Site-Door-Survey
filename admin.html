@@ -83,6 +83,49 @@
   .page-intro { margin-bottom: 16px; }
   .page-intro h2 { font-family: var(--font-head); font-size: 21px; font-weight: 600; letter-spacing: -0.01em; color: var(--brand); margin-bottom: 3px; }
   .page-intro p { font-size: 13px; color: var(--text-muted); }
+
+  /* Dashboard tabs + Insights */
+  .tabs { display: flex; background: var(--surface2); border-radius: var(--radius-lg); padding: 4px; margin-bottom: 16px; gap: 4px; }
+  .tab-btn { flex: 1; border: none; background: none; font-family: var(--font-head); font-size: 13px; font-weight: 600; letter-spacing: 0.01em; color: var(--text-muted); padding: 10px 8px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .tab-btn.active { background: var(--brand); color: #fff; box-shadow: 0 1px 3px rgba(18,48,77,0.25); }
+  .range-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .range-chip { border: 0.5px solid var(--border-strong); background: var(--surface); color: var(--text-mid); font-family: inherit; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 20px; cursor: pointer; }
+  .range-chip.active { background: var(--accent-light); border-color: var(--accent); color: var(--brand); }
+  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .kpi { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px; border-top: 3px solid var(--accent); }
+  .kpi-val { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--brand); line-height: 1.1; }
+  .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-top: 5px; }
+  .stat-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; }
+  .stat-card h3 { font-family: var(--font-head); font-size: 14px; font-weight: 600; color: var(--brand); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+  .stat-card h3 i { color: var(--accent); font-size: 17px; }
+  .split-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--surface2); }
+  .split-bar div { height: 100%; }
+  .split-legend { display: flex; justify-content: space-between; margin-top: 9px; font-size: 12px; color: var(--text-mid); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+  .col-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
+  .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; }
+  .col-n { font-size: 11px; font-weight: 600; color: var(--brand); margin-bottom: 3px; }
+  .col-bar { width: 100%; max-width: 34px; background: var(--brand); border-radius: 5px 5px 0 0; min-height: 2px; }
+  .col-bar.hi { background: var(--accent); }
+  .col-lab { font-size: 10px; color: var(--text-muted); margin-top: 6px; white-space: nowrap; }
+  .hbar-row { margin-bottom: 9px; }
+  .hbar-row:last-child { margin-bottom: 0; }
+  .hbar-top { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; margin-bottom: 3px; }
+  .hbar-top span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbar-top span:last-child { font-weight: 600; color: var(--brand); }
+  .hbar-track { height: 7px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .hbar-fill { height: 100%; background: var(--brand-mid); border-radius: 4px; }
+  .stat-empty { font-size: 12.5px; color: var(--text-muted); }
+  .stat-note { font-size: 11.5px; color: var(--text-muted); text-align: center; margin-top: 4px; }
+  .archive-btn {
+    width: 100%; padding: 13px; margin-top: 10px; background: var(--accent-light); color: var(--brand);
+    border: 0.5px solid var(--accent); border-radius: var(--radius-lg);
+    font-size: 14px; font-family: inherit; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .archive-btn:active { opacity: 0.8; }
+  .archive-btn:disabled { opacity: 0.55; cursor: default; }
+  .archived-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--surface2); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
   .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
 
   .sub-card {
@@ -179,16 +222,37 @@
   <header class="app-header">
     <div>
       <h1>Survey Submissions</h1>
-      <div class="sub">Emmerson Locksmiths &amp; Security</div>
     </div>
     <button class="signout-btn" onclick="doSignOut()"><i class="ti ti-logout"></i> Sign out</button>
   </header>
   <div class="wrap">
-    <div class="page-intro">
-      <h2>Recent surveys</h2>
-      <p id="dash-count-text">Loading…</p>
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-surveys" onclick="setTab('surveys')"><i class="ti ti-clipboard-list"></i> Surveys</button>
+      <button class="tab-btn" id="tab-insights" onclick="setTab('insights')"><i class="ti ti-chart-bar"></i> Insights</button>
     </div>
-    <div id="sub-list"></div>
+    <div id="view-surveys">
+      <div class="page-intro">
+        <h2>Recent surveys</h2>
+        <p id="dash-count-text">Loading…</p>
+      </div>
+      <div class="range-row" id="list-filter">
+        <button class="range-chip active" data-f="active" onclick="setListFilter('active')">Active</button>
+        <button class="range-chip" data-f="archived" onclick="setListFilter('archived')">Archived</button>
+      </div>
+      <div id="sub-list"></div>
+    </div>
+    <div id="view-insights" style="display:none;">
+      <div class="page-intro">
+        <h2>Insights</h2>
+        <p>Residential surveys only</p>
+      </div>
+      <div class="range-row" id="range-row">
+        <button class="range-chip" data-r="30" onclick="setRange(30)">30 days</button>
+        <button class="range-chip" data-r="90" onclick="setRange(90)">90 days</button>
+        <button class="range-chip active" data-r="0" onclick="setRange(0)">All time</button>
+      </div>
+      <div id="stats-body"></div>
+    </div>
   </div>
 </div>
 
@@ -207,6 +271,7 @@
       <button class="export-btn" id="export-pdf-btn" onclick="exportSubmissionPDF()">
         <i class="ti ti-file-type-pdf"></i> Export as PDF
       </button>
+      <button class="archive-btn" id="archive-btn" onclick="toggleArchive()"></button>
     </div>
     <div class="danger-zone">
       <button class="delete-btn" onclick="confirmDeleteSubmission()">
@@ -292,10 +357,11 @@ auth.onAuthStateChanged((user) => {
 
 function loadSubmissions() {
   document.getElementById('dash-count-text').textContent = 'Loading…';
-  db.collection('submissions').orderBy('submittedAt', 'desc').limit(100).get()
+  db.collection('submissions').orderBy('submittedAt', 'desc').limit(500).get()
     .then((snap) => {
       submissions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderSubList();
+      renderStats();
     })
     .catch((err) => {
       console.error(err);
@@ -310,17 +376,37 @@ function fmtDate(ts) {
          ' · ' + d.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
 }
 
+let listFilter = 'active';
+
+function setListFilter(f) {
+  listFilter = f;
+  renderSubList();
+}
+
 function renderSubList() {
   const list = document.getElementById('sub-list');
+  const nArch = submissions.filter(s => s.archived).length;
+  const nActive = submissions.length - nArch;
+  document.querySelectorAll('#list-filter .range-chip').forEach(c => {
+    const f = c.dataset.f;
+    c.classList.toggle('active', f === listFilter);
+    c.textContent = (f === 'active' ? 'Active' : 'Archived') + ' (' + (f === 'active' ? nActive : nArch) + ')';
+  });
+  const shown = listFilter === 'archived' ? nArch : nActive;
   document.getElementById('dash-count-text').textContent =
-    submissions.length + ' survey' + (submissions.length === 1 ? '' : 's') + ' received';
+    shown + (listFilter === 'archived' ? ' archived' : '') + ' survey' + (shown === 1 ? '' : 's') + (listFilter === 'archived' ? '' : ' to review');
 
-  if (submissions.length === 0) {
-    list.innerHTML = '<div class="empty-state">No surveys submitted yet.<br>Once a customer submits from the survey app, it\'ll show up here.</div>';
+  if (shown === 0) {
+    list.innerHTML = listFilter === 'archived'
+      ? '<div class="empty-state">No archived surveys.<br>Archive a survey from its detail page when you\'re done with it.</div>'
+      : (submissions.length === 0
+        ? '<div class="empty-state">No surveys submitted yet.<br>Once a customer submits from the survey app, it\'ll show up here.</div>'
+        : '<div class="empty-state">All caught up — no active surveys.</div>');
     return;
   }
 
   list.innerHTML = submissions.map((s, i) => {
+    if (!!s.archived !== (listFilter === 'archived')) return '';
     const title = [s.client, s.site].filter(Boolean).join(' — ') || 'Unnamed job';
     const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
     return `<div class="sub-card" onclick="openSubmission(${i})">
@@ -328,7 +414,7 @@ function renderSubList() {
       <div class="sub-info">
         <div class="sub-title">${escapeHTML(title)}</div>
         <div class="sub-meta">
-          <span class="type-tag">${typeLabel}</span>
+          <span class="type-tag">${typeLabel}</span>${s.archived ? '<span class="archived-tag">Archived</span>' : ''}
           <span>${s.doorCount || 0} door${s.doorCount === 1 ? '' : 's'}</span>
           <span>${s.photoCount || 0} photo${s.photoCount === 1 ? '' : 's'}</span>
         </div>
@@ -340,15 +426,186 @@ function renderSubList() {
   }).join('');
 }
 
+/* ---------- Insights ---------- */
+let statsRange = 0;
+
+function setTab(t) {
+  document.getElementById('view-surveys').style.display = t === 'surveys' ? '' : 'none';
+  document.getElementById('view-insights').style.display = t === 'insights' ? '' : 'none';
+  document.getElementById('tab-surveys').classList.toggle('active', t === 'surveys');
+  document.getElementById('tab-insights').classList.toggle('active', t === 'insights');
+  if (t === 'insights') renderStats();
+}
+
+function setRange(r) {
+  statsRange = r;
+  document.querySelectorAll('.range-chip').forEach(c => c.classList.toggle('active', Number(c.dataset.r) === r));
+  renderStats();
+}
+
+function subDate(s) {
+  const t = s.submittedAt;
+  if (!t) return null;
+  return t.toDate ? t.toDate() : new Date(t);
+}
+
+function tally(map, v) {
+  const k = String(v == null ? '' : v).trim();
+  if (k) map[k] = (map[k] || 0) + 1;
+}
+
+function topList(map, n) {
+  return Object.entries(map).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, n);
+}
+
+function hbars(entries) {
+  if (!entries.length) return '<div class="stat-empty">No data yet.</div>';
+  const max = entries[0][1];
+  return entries.map(([k, v]) => `<div class="hbar-row">
+    <div class="hbar-top"><span>${escapeHTML(k)}</span><span>${v}</span></div>
+    <div class="hbar-track"><div class="hbar-fill" style="width:${Math.max(4, v / max * 100)}%"></div></div>
+  </div>`).join('');
+}
+
+function startOfWeek(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); // Monday
+  return x;
+}
+
+function renderStats() {
+  const body = document.getElementById('stats-body');
+  if (!body) return;
+  const now = new Date();
+  const cutoff = statsRange ? new Date(now.getTime() - statsRange * 86400000) : null;
+  const resAll = submissions.filter(s => s.jobType === 'residential');
+  const subs = resAll.filter(s => {
+    if (!cutoff) return true;
+    const d = subDate(s);
+    return d && d >= cutoff;
+  });
+
+  if (!subs.length) {
+    body.innerHTML = '<div class="empty-state">No residential surveys in this period yet.</div>';
+    return;
+  }
+
+  let doors = 0, photos = 0;
+  const types = {}, swing = {}, outcome = {}, clients = {}, dow = [0,0,0,0,0,0,0];
+  subs.forEach(s => {
+    const dc = (s.doors && s.doors.length) || s.doorCount || 0;
+    doors += dc;
+    photos += s.photoCount || 0;
+    if (s.client) tally(clients, s.client);
+    const d = subDate(s);
+    if (d) dow[d.getDay()]++;
+    (s.doors || []).forEach(dr => {
+      tally(types, dr.type);
+      tally(swing, dr.swing);
+      (dr.outcome || []).forEach(v => tally(outcome, v));
+    });
+  });
+
+  // surveys per week, last 8 weeks
+  const wk0 = startOfWeek(now);
+  const weeks = [];
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date(wk0); d.setDate(d.getDate() - i * 7);
+    weeks.push({ start: d, n: 0 });
+  }
+  resAll.forEach(s => {
+    const d = subDate(s);
+    if (!d) return;
+    for (let i = weeks.length - 1; i >= 0; i--) {
+      if (d >= weeks[i].start) { weeks[i].n++; break; }
+    }
+  });
+  const wmax = Math.max(1, ...weeks.map(w => w.n));
+  const wpeak = Math.max(...weeks.map(w => w.n));
+
+  // busiest day (Mon-first order)
+  const names = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const order = [1,2,3,4,5,6,0];
+  const dmax = Math.max(1, ...dow);
+
+  const total = subs.length;
+  const repeat = topList(clients, 5).filter(([, v]) => v > 1);
+
+  body.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val">${total}</div><div class="kpi-label">Surveys</div></div>
+      <div class="kpi"><div class="kpi-val">${doors}</div><div class="kpi-label">Doors surveyed</div></div>
+      <div class="kpi"><div class="kpi-val">${(doors / total).toFixed(1)}</div><div class="kpi-label">Avg doors / survey</div></div>
+      <div class="kpi"><div class="kpi-val">${photos}</div><div class="kpi-label">Photos taken</div></div>
+    </div>
+
+    <div class="stat-card">
+      <h3><i class="ti ti-calendar-stats"></i> Surveys per week</h3>
+      <div class="col-chart">${weeks.map(w => `<div class="col">
+        <div class="col-n">${w.n || ''}</div>
+        <div class="col-bar${w.n === wpeak && w.n > 0 ? ' hi' : ''}" style="height:${w.n / wmax * 88}px"></div>
+        <div class="col-lab">${w.start.getDate()}/${w.start.getMonth() + 1}</div></div>`).join('')}</div>
+      <div class="stat-note">Weeks starting Monday · last 8 weeks</div>
+    </div>
+
+    <div class="stat-card">
+      <h3><i class="ti ti-clock"></i> Busiest days</h3>
+      <div class="col-chart" style="height:100px">${order.map(i => `<div class="col">
+        <div class="col-n">${dow[i] || ''}</div>
+        <div class="col-bar${dow[i] === Math.max(...dow) && dow[i] > 0 ? ' hi' : ''}" style="height:${dow[i] / dmax * 70}px"></div>
+        <div class="col-lab">${names[i]}</div></div>`).join('')}</div>
+    </div>
+
+    <div class="stat-card"><h3><i class="ti ti-door"></i> Door types</h3>${hbars(topList(types, 6))}</div>
+    <div class="stat-card"><h3><i class="ti ti-arrows-left-right"></i> Door swing</h3>${hbars(topList(swing, 4))}</div>
+    <div class="stat-card"><h3><i class="ti ti-tools"></i> Work needed</h3>${hbars(topList(outcome, 8))}</div>
+    <div class="stat-card"><h3><i class="ti ti-repeat"></i> Repeat clients</h3>${repeat.length ? hbars(repeat) : '<div class="stat-empty">No repeat clients in this period.</div>'}</div>
+    <div class="stat-note">Based on ${resAll.length} residential survey${resAll.length === 1 ? '' : 's'}${submissions.length >= 500 ? ' (limit reached — older surveys not counted)' : ''}.</div>
+  `;
+}
+
 function escapeHTML(str) {
   const d = document.createElement('div');
   d.textContent = str == null ? '' : String(str);
   return d.innerHTML;
 }
 
+function updateArchiveBtn() {
+  const s = activeSubmission;
+  const b = document.getElementById('archive-btn');
+  if (!s || !b) return;
+  b.disabled = false;
+  b.innerHTML = s.archived
+    ? '<i class="ti ti-archive-off"></i> Restore to active'
+    : '<i class="ti ti-archive"></i> Archive this survey';
+}
+
+async function toggleArchive() {
+  const s = activeSubmission;
+  if (!s) return;
+  const archiving = !s.archived;
+  const b = document.getElementById('archive-btn');
+  b.disabled = true;
+  try {
+    await db.collection('submissions').doc(s.id).update(
+      archiving ? { archived: true, archivedAt: firebase.firestore.FieldValue.serverTimestamp() }
+                : { archived: false, archivedAt: null });
+    s.archived = archiving;
+    renderSubList();
+    renderStats();
+    showPage('page-dashboard');
+    showToast(archiving ? 'Survey archived' : 'Survey restored');
+  } catch (err) {
+    console.error(err);
+    b.disabled = false;
+    showToast('Could not update — check your connection and try again');
+  }
+}
+
 async function openSubmission(idx) {
   activeSubmission = submissions[idx];
   const s = activeSubmission;
+  updateArchiveBtn();
   const title = [s.client, s.site].filter(Boolean).join(' — ') || 'Unnamed job';
   const typeLabel = s.jobType === 'residential' ? 'Residential' : 'Commercial';
 

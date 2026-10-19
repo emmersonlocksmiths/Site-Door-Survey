@@ -51,7 +51,7 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.5;
     min-height: calc(100vh - 55px);
     padding-bottom: 60px;
@@ -100,18 +100,18 @@
 
   .field { margin-bottom: 12px; }
   .field label {
-    font-size: 11.5px; color: var(--text-muted);
+    font-size: 12px; color: var(--text-muted);
     display: block; margin-bottom: 5px; font-weight: 600;
     letter-spacing: 0.02em;
   }
   .field-label-text {
-    font-size: 11.5px; color: var(--text-muted);
+    font-size: 12px; color: var(--text-muted);
     display: block; margin-bottom: 5px; font-weight: 600;
     letter-spacing: 0.02em;
   }
   .field input:not([type="checkbox"]), .field select, .field textarea {
     width: 100%;
-    font-size: 15.5px;
+    font-size: 16px;
     font-family: inherit;
     padding: 11px 12px;
     border: 1px solid var(--border-strong);
@@ -133,8 +133,11 @@
     border-color: var(--brand-mid);
     background: var(--surface);
   }
+  .photo-rec { display: flex; align-items: center; gap: 9px; background: var(--accent-light); border: 0.5px solid var(--accent); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 11px 13px; margin: 0 0 10px; font-family: var(--font-head); font-size: 14px; font-weight: 700; letter-spacing: 0.01em; color: var(--brand); }
+  .photo-rec i { font-size: 20px; color: var(--accent); }
   .field input::placeholder { color: var(--text-muted); }
-  .field textarea { resize: none; height: 72px; font-size: 14.5px; }
+  .field input::placeholder, .field textarea::placeholder { font-size: 16px; font-family: inherit; }
+  .field textarea { resize: none; height: 72px; font-size: 16px; }
 
   .field .required-mark { color: var(--danger); }
   .field.field-error input:not([type="checkbox"]) {
@@ -156,7 +159,7 @@
     color: var(--danger);
     border-radius: var(--radius);
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 12px;
   }
@@ -201,7 +204,7 @@
     margin-bottom: 14px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .job-summary-bar .job-name { font-size: 13px; font-weight: 600; color: var(--brand); }
+  .job-summary-bar .job-name { font-size: 14px; font-weight: 600; color: var(--brand); }
   .job-summary-bar .job-ref { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
   .edit-job-btn {
     background: none; border: 1px solid rgba(18,48,77,0.22);
@@ -225,7 +228,7 @@
     flex-shrink: 0;
     padding: 6px 13px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: inherit;
     font-weight: 500;
     cursor: pointer;
@@ -364,7 +367,7 @@
   .summary-num {
     width: 32px; height: 32px; border-radius: var(--radius-sm);
     background: var(--brand-light); color: var(--brand);
-    font-size: 13px; font-weight: 700;
+    font-size: 14px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
@@ -377,7 +380,7 @@
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%) translateY(80px);
     background: var(--brand-dark); color: #fff;
-    font-size: 13px; padding: 10px 18px;
+    font-size: 14px; padding: 10px 18px;
     border-radius: 20px;
     transition: transform 0.3s ease;
     z-index: 200; white-space: nowrap;
@@ -412,10 +415,10 @@
   }
   .summary-detail-header .sdh-title {
     font-family: var(--font-head);
-    font-size: 15px; font-weight: 600; color: var(--brand); flex: 1;
+    font-size: 16px; font-weight: 600; color: var(--brand); flex: 1;
   }
   .summary-detail-header .sdh-edit {
-    font-size: 13px; color: var(--brand-mid);
+    font-size: 14px; color: var(--brand-mid);
     display: flex; align-items: center; gap: 3px;
   }
   .summary-detail-body { padding: 16px; }
@@ -431,12 +434,12 @@
     color: var(--text-muted); margin-bottom: 4px;
   }
   .summary-field-value {
-    font-size: 15px; color: var(--text); line-height: 1.5;
+    font-size: 14px; color: var(--text); line-height: 1.5;
   }
   .summary-field-value.empty { color: var(--text-muted); font-style: italic; }
   .outcome-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
   .outcome-tag {
-    font-size: 13px; padding: 4px 11px;
+    font-size: 12px; padding: 4px 11px;
     background: var(--accent-light); color: var(--brand);
     border: 1px solid rgba(184,145,63,0.35);
     border-radius: 20px; font-weight: 600;
@@ -475,7 +478,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 13px;
-    font-size: 14.5px;
+    font-size: 16px;
     line-height: 1.3;
     color: var(--text);
     cursor: pointer;
@@ -503,7 +506,7 @@
     border: 1.5px solid var(--border-strong);
     background: var(--surface);
     color: var(--text-mid);
-    font-size: 14px;
+    font-size: 16px;
     font-family: inherit;
     font-weight: 500;
     cursor: pointer;
@@ -537,7 +540,7 @@
   }
   .modal-title {
     font-family: var(--font-head);
-    font-size: 16px; font-weight: 600;
+    font-size: 17px; font-weight: 600;
     color: var(--text); margin-bottom: 6px;
   }
   .modal-msg {
@@ -548,14 +551,14 @@
     width: 100%; padding: 14px;
     background: var(--danger); color: #fff;
     border: none; border-radius: var(--radius-lg);
-    font-size: 15px; font-family: inherit; font-weight: 600;
+    font-size: 16px; font-family: inherit; font-weight: 600;
     cursor: pointer;
   }
   .modal-cancel {
     width: 100%; padding: 14px;
     background: var(--surface2); color: var(--text);
     border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
-    font-size: 15px; font-family: inherit; font-weight: 500;
+    font-size: 16px; font-family: inherit; font-weight: 500;
     cursor: pointer;
   }
 
@@ -593,12 +596,11 @@
   <header class="app-header">
     <div>
       <h1>Door Survey Form</h1>
-      <div class="sub">Emmerson Locksmiths &amp; Security</div>
     </div>
     <div class="header-icon"><i class="ti ti-clipboard-list"></i></div>
   </header>
   <div class="wrap" style="display:flex; flex-direction:column; min-height:calc(100vh - 74px); padding-bottom:24px;">
-    <button id="hero-survey-btn" style="width:100%; padding:30px 20px 26px; background:var(--brand); color:#fff; border:none; border-bottom:3px solid var(--accent); border-radius:18px; font-family:var(--font-head); font-size:19px; font-weight:600; letter-spacing:-0.01em; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; margin-top:32px; box-shadow:var(--shadow-md), 0 10px 30px rgba(13,35,56,0.2); position:relative; overflow:hidden; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;">
+    <button id="hero-survey-btn" style="width:100%; padding:30px 20px 26px; background:var(--brand); color:#fff; border:none; border-bottom:3px solid var(--accent); border-radius:18px; font-family:var(--font-head); font-size:17px; font-weight:600; letter-spacing:-0.01em; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; margin-top:32px; box-shadow:var(--shadow-md), 0 10px 30px rgba(13,35,56,0.2); position:relative; overflow:hidden; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;">
       <span style="width:62px; height:62px; border-radius:50%; background:rgba(255,255,255,0.08); border:1.5px solid rgba(184,145,63,0.6); display:flex; align-items:center; justify-content:center;">
         <i class="ti ti-home" style="font-size:30px;"></i>
       </span>
@@ -665,7 +667,7 @@
     <button class="next-btn" onclick="startSurvey()">
       Start door survey <i class="ti ti-arrow-right"></i>
     </button>
-    <button onclick="openChangePatternModal()" style="width:100%; padding:10px; background:none; color:var(--text-muted); border:none; font-size:12.5px; font-family:inherit; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; margin-top:2px;">
+    <button onclick="openChangePatternModal()" style="width:100%; padding:10px; background:none; color:var(--text-muted); border:none; font-size:12px; font-family:inherit; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; margin-top:2px;">
       <i class="ti ti-key" style="font-size:14px;"></i> Change unlock pattern
     </button>
   </div>
@@ -827,8 +829,9 @@
       <!-- Photos -->
       <div class="section-label">
         <i class="ti ti-camera"></i>Photos
-        <span id="photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">0 added</span>
+        <span id="photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;text-transform:none;letter-spacing:0;">0 added</span>
       </div>
+      <div class="photo-rec"><i class="ti ti-camera-plus"></i> Photos Recommended</div>
       <div class="photo-strip" id="photo-strip">
         <div class="photo-add-btn" id="photo-add-btn" onclick="document.getElementById('file-input').click()">
           <i class="ti ti-plus"></i>
@@ -937,8 +940,9 @@
 
       <div class="section-label">
         <i class="ti ti-camera"></i>Photos
-        <span id="res-photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;">0 added</span>
+        <span id="res-photo-count-label" style="font-weight:400;color:var(--text-muted);margin-left:4px;font-size:12px;text-transform:none;letter-spacing:0;">0 added</span>
       </div>
+      <div class="photo-rec"><i class="ti ti-camera-plus"></i> Photos Recommended</div>
       <div class="photo-strip" id="res-photo-strip">
         <div class="photo-add-btn" id="res-photo-add-btn" onclick="document.getElementById('res-file-input').click()">
           <i class="ti ti-plus"></i>
@@ -994,12 +998,12 @@
     <div style="width:72px; height:72px; border-radius:50%; background:var(--brand-light); border:1.5px solid rgba(184,145,63,0.5); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
       <i class="ti ti-check" style="font-size:36px; color:var(--brand);"></i>
     </div>
-    <h2 style="font-family:var(--font-head); font-size:20px; font-weight:600; color:var(--brand); letter-spacing:-0.01em; margin-bottom:8px;">Survey submitted</h2>
+    <h2 style="font-family:var(--font-head); font-size:21px; font-weight:600; color:var(--brand); letter-spacing:-0.01em; margin-bottom:8px;">Survey submitted</h2>
     <p style="font-size:14px; color:var(--text-mid); margin-bottom:28px;">Thanks — your door survey has been sent straight through to Emmerson Locksmiths. No need to do anything else.</p>
     <button class="next-btn" onclick="startNewSurvey()">
       <i class="ti ti-plus"></i> Start a new survey
     </button>
-    <p style="font-size:12.5px; color:var(--text-muted); margin-top:6px;">You can now close this window.</p>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">You can now close this window.</p>
   </div>
 </div>
 
@@ -1048,7 +1052,7 @@
       <div class="pattern-dot" data-idx="8" style="left:110px; top:184px;"></div>
       <div class="pattern-dot" data-idx="9" style="left:184px; top:184px;"></div>
     </div>
-    <div class="passcode-error" id="passcode-error" style="display:none; color:var(--danger); font-size:13px; margin-top:6px;">Incorrect pattern</div>
+    <div class="passcode-error" id="passcode-error" style="display:none; color:var(--danger); font-size:12px; margin-top:6px;">Incorrect pattern</div>
     <div class="modal-btns" style="margin-top:16px;">
       <button class="modal-cancel" onclick="closeCommercialUnlockModal()">Cancel</button>
     </div>
